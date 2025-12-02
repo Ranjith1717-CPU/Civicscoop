@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CivicScoop - City Council Meeting Analysis Platform</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0f1c;
+            color: #e2e8f0;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header Styles */
+        .header {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo h1 {
+            color: #60a5fa;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .pro-badge {
+            background: linear-gradient(135deg, #dc2626, #ea580c);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .nav-item {
+            color: #94a3b8;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+            position: relative;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: #60a5fa;
+        }
+
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #60a5fa;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px 15px;
+            border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #0a0f1c 0%, #1e293b 50%, #0a0f1c 100%);
+            padding: 80px 30px 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(168, 85, 247, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #60a5fa, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            color: #94a3b8;
+            margin-bottom: 40px;
+            font-weight: 400;
+        }
+
+        /* Search Section */
+        .search-section {
+            max-width: 800px;
+            margin: 0 auto 60px;
+            position: relative;
+        }
+
+        .search-container {
+            position: relative;
+            display: flex;
+            gap: 15px;
+        }
+
+        .search-input {
+            flex: 1;
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 16px 20px 16px 50px;
+            font-size: 16px;
+            color: #e2e8f0;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: #60a5fa;
+            box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.1);
+        }
+
+        .search-input::placeholder {
+            color: #64748b;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+            font-size: 18px;
+        }
+
+        .search-btn {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border: none;
+            border-radius: 12px;
+            padding: 16px 30px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        /* Filter Section */
+        .filter-section {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 25px 30px;
+            margin-bottom: 40px;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .filter-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .filter-title {
+            color: #e2e8f0;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .filter-pills {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .filter-pill {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .filter-pill:hover {
+            background: rgba(59, 130, 246, 0.2);
+        }
+
+        .filter-pill.active {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .pill-count {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 2px 6px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            max-width: 1400px;
+            margin: 0 auto 40px;
+            padding: 0 30px;
+        }
+
+        .tab-list {
+            display: flex;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            gap: 30px;
+        }
+
+        .tab-item {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            padding: 15px 0;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            position: relative;
+            transition: color 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab-item:hover, .tab-item.active {
+            color: #60a5fa;
+        }
+
+        .tab-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #60a5fa;
+        }
+
+        .tab-badge {
+            background: rgba(96, 165, 250, 0.2);
+            color: #60a5fa;
+            border-radius: 10px;
+            padding: 2px 8px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* Meeting Grid */
+        .meetings-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px 60px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 25px;
+        }
+
+        .meeting-card {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .meeting-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #3b82f6, #a855f7);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .meeting-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            border-color: rgba(96, 165, 250, 0.3);
+        }
+
+        .meeting-card:hover::before {
+            opacity: 1;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .priority-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .priority-critical {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .priority-high {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .priority-medium {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .segments-count {
+            color: #94a3b8;
+            font-size: 12px;
+            text-align: right;
+        }
+
+        .meeting-title {
+            color: #e2e8f0;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .meeting-meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .engagement-score {
+            color: #22c55e;
+            font-weight: 600;
+        }
+
+        .topic-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .topic-tag {
+            background: rgba(96, 165, 250, 0.1);
+            color: #60a5fa;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .card-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #94a3b8;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .action-btn:hover {
+            background: rgba(96, 165, 250, 0.1);
+            color: #60a5fa;
+            border-color: rgba(96, 165, 250, 0.3);
+        }
+
+        .open-btn {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            font-weight: 600;
+            padding: 10px 20px;
+            border: none;
+        }
+
+        .open-btn:hover {
+            background: linear-gradient(135deg, #1d4ed8, #1e40af);
+            transform: translateY(-1px);
+        }
+
+        /* Stats Banner */
+        .stats-banner {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.8));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            margin: 0 30px 40px;
+            max-width: calc(1400px - 60px);
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            color: #60a5fa;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            color: #94a3b8;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* Loading States */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 60px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(96, 165, 250, 0.3);
+            border-top: 3px solid #60a5fa;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .hero-subtitle {
+                font-size: 18px;
+            }
+
+            .search-container {
+                flex-direction: column;
+            }
+
+            .meetings-grid {
+                grid-template-columns: 1fr;
+                padding: 0 20px 40px;
+            }
+
+            .header-content {
+                padding: 0 20px;
+            }
+
+            .header-nav {
+                display: none;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Animation Classes */
+        .fade-in {
+            animation: fadeIn 0.6s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-in {
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-30px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <h1>CivicScoop</h1>
+                <span class="pro-badge">Professional</span>
+            </div>
+            <nav class="header-nav">
+                <a href="CivicScoop_Dashboard.html" class="nav-item active">Dashboard</a>
+                <a href="CivicScoop_Analytics.html" class="nav-item">Analytics</a>
+                <a href="CivicScoop_Reports.html" class="nav-item">Reports</a>
+                <a href="CivicScoop_Settings.html" class="nav-item">Settings</a>
+            </nav>
+            <div class="user-profile">
+                <div class="avatar">JR</div>
+                <div>
+                    <div style="font-size: 14px; font-weight: 600;">John Reporter</div>
+                    <div style="font-size: 12px; color: #94a3b8;">Senior Correspondent</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content fade-in">
+            <h1>City Council Meeting Analysis</h1>
+            <p class="hero-subtitle">Explore processed meetings, search across content, and discover trends</p>
+        </div>
+    </section>
+
+    <!-- Search Section -->
+    <section class="search-section">
+        <div class="search-container">
+            <div style="position: relative; flex: 1;">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-input" placeholder="Search across all meetings..." id="searchInput">
+            </div>
+            <button class="search-btn" onclick="performSearch()">
+                <i class="fas fa-search"></i>
+                Search
+            </button>
+        </div>
+    </section>
+
+    <!-- Stats Banner -->
+    <section class="stats-banner fade-in">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-value">247</div>
+                <div class="stat-label">Total Meetings Analyzed</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">12.7K</div>
+                <div class="stat-label">Hours of Content</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">89%</div>
+                <div class="stat-label">AI Accuracy Rate</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">456</div>
+                <div class="stat-label">Stories Generated</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filter Section -->
+    <section class="filter-section slide-in">
+        <div class="filter-header">
+            <span class="filter-title">Show:</span>
+        </div>
+        <div class="filter-pills">
+            <div class="filter-pill active" onclick="filterMeetings('all')" data-filter="all">
+                <i class="fas fa-list"></i>
+                All Meetings
+                <span class="pill-count">11</span>
+            </div>
+            <div class="filter-pill" onclick="filterMeetings('priority')" data-filter="priority">
+                <i class="fas fa-bolt"></i>
+                Priority Review
+                <span class="pill-count">11</span>
+            </div>
+            <div class="filter-pill" onclick="filterMeetings('critical')" data-filter="critical">
+                <i class="fas fa-exclamation-triangle"></i>
+                Critical Priority
+                <span class="pill-count">5</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Navigation Tabs -->
+    <section class="nav-tabs">
+        <div class="tab-list">
+            <button class="tab-item active" onclick="switchTab('meetings')" data-tab="meetings">
+                <i class="fas fa-video"></i>
+                Meetings
+                <span class="tab-badge">11</span>
+            </button>
+            <button class="tab-item" onclick="switchTab('search')" data-tab="search">
+                <i class="fas fa-search"></i>
+                Search Results
+                <span class="tab-badge">0</span>
+            </button>
+            <button class="tab-item" onclick="switchTab('trends')" data-tab="trends">
+                <i class="fas fa-chart-line"></i>
+                Topic Trends
+            </button>
+        </div>
+    </section>
+
+    <!-- Meetings Grid -->
+    <section class="meetings-grid" id="meetingsGrid">
+        <!-- Meeting cards will be inserted here by JavaScript -->
+    </section>
+
+    <script>
+        // Meeting data
+        const meetingsData = [
+            {
+                id: 'austin-housing',
+                title: 'Austin City Council Meeting: Affordable Housing Crisis',
+                date: 'December 2, 2025',
+                location: 'Austin',
+                priority: 'critical',
+                priorityScore: '73%',
+                segments: '29:40 high segments',
+                engagement: '72.5% high engagement',
+                topics: ['Housing Crisis', 'Community Development', 'Property Values'],
+                filename: 'CivicScoop_Interactive_Professional.html'
+            },
+            {
+                id: 'seattle-budget',
+                title: 'Seattle City Council: 2025 Budget Approval',
+                date: 'November 28, 2025',
+                location: 'Seattle',
+                priority: 'critical',
+                priorityScore: '65%',
+                segments: '28:43 high segments',
+                engagement: '65.1% high engagement',
+                topics: ['Budget', 'Public Safety', 'Social Services']
+            },
+            {
+                id: 'miami-climate',
+                title: 'Miami-Dade: Climate Resilience Planning',
+                date: 'December 1, 2025',
+                location: 'Miami-Dade',
+                priority: 'high',
+                priorityScore: '7%',
+                segments: '6:7 high segments',
+                engagement: '85.7% high engagement',
+                topics: ['Climate Change', 'Infrastructure', 'Resilience']
+            },
+            {
+                id: 'denver-transit',
+                title: 'Denver City Council: Public Transit Expansion',
+                date: 'November 30, 2025',
+                location: 'Denver',
+                priority: 'critical',
+                priorityScore: '86%',
+                segments: '6:7 high segments',
+                engagement: '85.7% high engagement',
+                topics: ['Transportation', 'Transit', 'Infrastructure']
+            },
+            {
+                id: 'simi-valley',
+                title: 'Simi Valley City Council Meeting: Police Accountability',
+                date: 'August 5, 2025',
+                location: 'Simi Valley',
+                priority: 'critical',
+                priorityScore: '73%',
+                segments: '29:40 high segments',
+                engagement: '72.5% high engagement',
+                topics: ['Police Accountability', 'Hate Crimes', 'Racism']
+            },
+            {
+                id: 'calabasas',
+                title: 'Calabasas City Council Discussion: Development Impact',
+                date: 'February 12, 2025',
+                location: 'Calabasas',
+                priority: 'critical',
+                priorityScore: '65%',
+                segments: '28:43 high segments',
+                engagement: '65.1% high engagement',
+                topics: ['Landfill', 'Transportation', 'Dumping']
+            },
+            {
+                id: 'hickory',
+                title: 'Hickory City Council Meeting: Economic Development',
+                date: 'August 5, 2025',
+                location: 'Hickory',
+                priority: 'critical',
+                priorityScore: '86%',
+                segments: '6:7 high segments',
+                engagement: '85.7% high engagement',
+                topics: ['Economic Development', 'Tourism', 'Infrastructure']
+            },
+            {
+                id: 'fort-worth',
+                title: 'Fort Worth City Council Discussion: Road Infrastructure',
+                date: 'August 5, 2025',
+                location: 'Fort Worth',
+                priority: 'medium',
+                priorityScore: '30%',
+                segments: '15:50 high segments',
+                engagement: '30.0% high engagement',
+                topics: ['Roads', 'Infrastructure', 'Budget']
+            },
+            {
+                id: 'palmetto-bay',
+                title: 'Palmetto Bay Council Meeting: Environmental Protection',
+                date: 'September 15, 2025',
+                location: 'Palmetto Bay',
+                priority: 'medium',
+                priorityScore: '22%',
+                segments: '8:28 high segments',
+                engagement: '22.2% high engagement',
+                topics: ['Environment', 'Protection', 'Sustainability']
+            },
+            {
+                id: 'south-san-francisco',
+                title: 'City of South San Francisco Council: Development Review',
+                date: 'May 28, 2025',
+                location: 'South San Francisco',
+                priority: 'high',
+                priorityScore: '7%',
+                segments: '2:31 high segments',
+                engagement: '6.5% high engagement',
+                topics: ['Development', 'Planning', 'Zoning']
+            },
+            {
+                id: 'richmond',
+                title: 'Richmond City Council: Community Safety Initiative',
+                date: 'October 10, 2025',
+                location: 'Richmond',
+                priority: 'critical',
+                priorityScore: '78%',
+                segments: '22:15 high segments',
+                engagement: '68.3% high engagement',
+                topics: ['Public Safety', 'Community', 'Crime Prevention']
+            }
+        ];
+
+        let currentFilter = 'all';
+        let searchTerm = '';
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            renderMeetings();
+            animateCards();
+        });
+
+        function renderMeetings() {
+            const grid = document.getElementById('meetingsGrid');
+            const filteredMeetings = filterMeetingsData();
+
+            if (filteredMeetings.length === 0) {
+                grid.innerHTML = '<div class="loading"><div>No meetings match your criteria</div></div>';
+                return;
+            }
+
+            grid.innerHTML = filteredMeetings.map(meeting => createMeetingCard(meeting)).join('');
+            animateCards();
+        }
+
+        function createMeetingCard(meeting) {
+            const priorityClass = `priority-${meeting.priority}`;
+            const priorityText = meeting.priority === 'critical' ? 'Critical Priority' :
+                                 meeting.priority === 'high' ? 'High Priority' : 'Medium Priority';
+
+            return `
+                <div class="meeting-card fade-in" onclick="openMeeting('${meeting.id}', '${meeting.filename || ''}')">
+                    <div class="card-header">
+                        <div class="priority-badge ${priorityClass}">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            ${priorityText} ${meeting.priorityScore}
+                        </div>
+                        <div class="segments-count">${meeting.segments}</div>
+                    </div>
+                    <h3 class="meeting-title">${meeting.title}</h3>
+                    <div class="meeting-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-calendar"></i>
+                            ${meeting.date}
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            ${meeting.location}
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <span style="color: #94a3b8; font-size: 14px;">Priority Score: ${meeting.priorityScore} • </span>
+                        <span class="engagement-score">${meeting.engagement}</span>
+                    </div>
+                    <div class="topic-tags">
+                        ${meeting.topics.map(topic => `<span class="topic-tag">${topic}</span>`).join('')}
+                    </div>
+                    <div class="card-actions">
+                        <div class="action-buttons">
+                            <button class="action-btn" onclick="event.stopPropagation(); previewMeeting('${meeting.id}')">
+                                <i class="fas fa-play"></i>
+                                Video
+                            </button>
+                            <button class="action-btn" onclick="event.stopPropagation(); showAnalysis('${meeting.id}')">
+                                <i class="fas fa-chart-bar"></i>
+                                Analysis
+                            </button>
+                        </div>
+                        <button class="action-btn open-btn" onclick="openMeeting('${meeting.id}', '${meeting.filename || ''}')">
+                            Open →
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function filterMeetingsData() {
+            return meetingsData.filter(meeting => {
+                const matchesFilter = currentFilter === 'all' ||
+                                    (currentFilter === 'priority' && (meeting.priority === 'high' || meeting.priority === 'critical')) ||
+                                    (currentFilter === 'critical' && meeting.priority === 'critical');
+
+                const matchesSearch = searchTerm === '' ||
+                                    meeting.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                                    meeting.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                                    meeting.topics.some(topic => topic.toLowerCase().includes(searchTerm.toLowerCase()));
+
+                return matchesFilter && matchesSearch;
+            });
+        }
+
+        function filterMeetings(filter) {
+            currentFilter = filter;
+
+            // Update filter pills
+            document.querySelectorAll('.filter-pill').forEach(pill => {
+                pill.classList.remove('active');
+            });
+            document.querySelector(`[data-filter="${filter}"]`).classList.add('active');
+
+            renderMeetings();
+        }
+
+        function performSearch() {
+            searchTerm = document.getElementById('searchInput').value;
+            renderMeetings();
+
+            // Update search results tab
+            const searchCount = filterMeetingsData().length;
+            document.querySelector('[data-tab="search"] .tab-badge').textContent = searchCount;
+
+            if (searchTerm) {
+                switchTab('search');
+            }
+        }
+
+        function switchTab(tab) {
+            // Update tab states
+            document.querySelectorAll('.tab-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+
+            if (tab === 'meetings') {
+                currentFilter = 'all';
+                searchTerm = '';
+                document.getElementById('searchInput').value = '';
+                renderMeetings();
+            } else if (tab === 'trends') {
+                showTrendsView();
+            }
+        }
+
+        function openMeeting(meetingId, filename) {
+            if (filename && filename.includes('.html')) {
+                // Open the specific meeting analysis page
+                window.open(filename, '_blank');
+            } else {
+                // For meetings without specific files, open the main analysis page with the meeting ID
+                window.open(`CivicScoop_Interactive_Professional.html?meeting=${meetingId}`, '_blank');
+            }
+        }
+
+        function previewMeeting(meetingId) {
+            alert(`Video preview for ${meetingId} - Feature coming soon!`);
+        }
+
+        function showAnalysis(meetingId) {
+            alert(`Advanced analysis for ${meetingId} - Feature coming soon!`);
+        }
+
+        function showTrendsView() {
+            const grid = document.getElementById('meetingsGrid');
+            grid.innerHTML = `
+                <div style="grid-column: 1 / -1; text-align: center; padding: 60px;">
+                    <div style="margin-bottom: 30px;">
+                        <i class="fas fa-chart-line" style="font-size: 48px; color: #60a5fa; margin-bottom: 20px;"></i>
+                        <h3 style="color: #e2e8f0; font-size: 24px; margin-bottom: 15px;">Topic Trends Analysis</h3>
+                        <p style="color: #94a3b8;">Advanced analytics dashboard coming soon</p>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; max-width: 800px; margin: 0 auto;">
+                        <div style="background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 20px;">
+                            <h4 style="color: #ef4444; margin-bottom: 10px;">🔥 Trending Topics</h4>
+                            <div style="color: #94a3b8; font-size: 14px;">Housing Crisis, Budget Allocation, Police Reform</div>
+                        </div>
+                        <div style="background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 20px;">
+                            <h4 style="color: #3b82f6; margin-bottom: 10px;">📊 Engagement Spikes</h4>
+                            <div style="color: #94a3b8; font-size: 14px;">Peak activity during housing debates</div>
+                        </div>
+                        <div style="background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 20px;">
+                            <h4 style="color: #22c55e; margin-bottom: 10px;">🎯 Story Potential</h4>
+                            <div style="color: #94a3b8; font-size: 14px;">5 high-impact stories identified</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function animateCards() {
+            const cards = document.querySelectorAll('.meeting-card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.classList.add('fade-in');
+                }, index * 100);
+            });
+        }
+
+        // Search on Enter key
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+
+        // Auto-search as user types (debounced)
+        let searchTimeout;
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                performSearch();
+            }, 500);
+        });
+    </script>
+</body>
+</html>

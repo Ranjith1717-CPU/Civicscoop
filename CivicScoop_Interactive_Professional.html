@@ -1,0 +1,3373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CivicScoop Newsroom Pro - Interactive Demo</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo h1 {
+            color: #60a5fa;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .pro-badge {
+            background: linear-gradient(135deg, #dc2626, #ea580c);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-right: 8px;
+        }
+
+        .version-badge {
+            background: rgba(96, 165, 250, 0.2);
+            color: #60a5fa;
+            padding: 2px 8px;
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: 500;
+            border: 1px solid rgba(96, 165, 250, 0.3);
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            color: #e2e8f0;
+            font-size: 13px;
+            font-weight: 600;
+            line-height: 1;
+        }
+
+        .user-role {
+            color: #94a3b8;
+            font-size: 11px;
+            line-height: 1;
+        }
+
+        .share-btn, .settings-btn {
+            background: rgba(96, 165, 250, 0.1);
+            border: 1px solid rgba(96, 165, 250, 0.3);
+            color: #60a5fa;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .share-btn:hover, .settings-btn:hover {
+            background: rgba(96, 165, 250, 0.2);
+            border-color: rgba(96, 165, 250, 0.5);
+        }
+
+        .settings-btn {
+            padding: 8px;
+        }
+
+        .session-id {
+            color: #94a3b8;
+            font-size: 11px;
+            margin-left: 10px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .back-to-dashboard {
+            background: rgba(96, 165, 250, 0.1);
+            border: 1px solid rgba(96, 165, 250, 0.3);
+            color: #60a5fa;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-left: 15px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .back-to-dashboard:hover {
+            background: rgba(96, 165, 250, 0.2);
+            border-color: rgba(96, 165, 250, 0.5);
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 20px;
+            padding: 8px 16px;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+        }
+
+        .main-layout {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px;
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 30px;
+        }
+
+        .video-section {
+            background: #1e293b;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .video-header {
+            background: #0f172a;
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .video-title {
+            color: #60a5fa;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .video-meta {
+            display: flex;
+            gap: 20px;
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        .video-player {
+            position: relative;
+            height: 400px;
+            background: linear-gradient(135deg, #1e293b, #334155);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .video-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            padding: 20px;
+        }
+
+        .timeline-container {
+            margin-bottom: 15px;
+        }
+
+        .timeline {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .timeline-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #60a5fa, #3b82f6);
+            width: 34%;
+            border-radius: 3px;
+            position: relative;
+            transition: width 0.3s ease;
+        }
+
+        .timeline-markers {
+            position: absolute;
+            top: -8px;
+            width: 100%;
+            height: 22px;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            width: 4px;
+            height: 22px;
+            border-radius: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-marker:hover {
+            transform: scale(1.2);
+            z-index: 10;
+        }
+
+        .marker-heated {
+            background: #ef4444;
+            left: 15%;
+            animation: glow-red 2s infinite;
+        }
+
+        .marker-controversial {
+            background: #f59e0b;
+            left: 45%;
+            animation: glow-yellow 2s infinite;
+        }
+
+        .marker-breaking {
+            background: #dc2626;
+            left: 67%;
+            animation: glow-breaking 1s infinite;
+        }
+
+        @keyframes glow-red {
+            0%, 100% { box-shadow: 0 0 5px #ef4444; }
+            50% { box-shadow: 0 0 15px #ef4444; }
+        }
+
+        @keyframes glow-yellow {
+            0%, 100% { box-shadow: 0 0 5px #f59e0b; }
+            50% { box-shadow: 0 0 15px #f59e0b; }
+        }
+
+        @keyframes glow-breaking {
+            0%, 100% { box-shadow: 0 0 10px #dc2626; }
+            50% { box-shadow: 0 0 20px #dc2626; }
+        }
+
+        .playback-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: white;
+        }
+
+        .play-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 5px;
+            transition: transform 0.2s ease;
+        }
+
+        .play-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .time-display {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+        }
+
+        .engagement-panel {
+            background: #1e293b;
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .engagement-title {
+            color: #60a5fa;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .engagement-timeline {
+            height: 60px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .engagement-bars {
+            display: flex;
+            height: 100%;
+            align-items: end;
+            padding: 10px;
+            gap: 2px;
+        }
+
+        .engagement-bar {
+            flex: 1;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .engagement-bar:hover {
+            opacity: 0.8;
+            transform: scaleY(1.1);
+        }
+
+        .features-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .feature-panel {
+            background: #1e293b;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .panel-header {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            padding: 16px 20px;
+            color: white;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .panel-content {
+            padding: 20px;
+        }
+
+        .alert-item {
+            background: linear-gradient(135deg, #dc2626, #991b1b);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 12px;
+            position: relative;
+            overflow: hidden;
+            animation: slideInRight 0.5s ease;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .alert-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(220, 38, 38, 0.4);
+        }
+
+        .alert-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .alert-priority {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .alert-content {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .alert-timestamp {
+            font-size: 12px;
+            opacity: 0.7;
+            margin-top: 5px;
+        }
+
+        .story-generator {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .story-template {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .story-template:hover {
+            background: rgba(34, 197, 94, 0.2);
+            transform: translateX(5px);
+            border-color: rgba(34, 197, 94, 0.5);
+            box-shadow: 0 5px 15px rgba(34, 197, 94, 0.2);
+        }
+
+        .story-template.selected {
+            background: rgba(34, 197, 94, 0.3);
+            border-color: #22c55e;
+            transform: translateX(5px);
+        }
+
+        .story-type {
+            color: #22c55e;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .story-headline {
+            color: #e2e8f0;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .story-description {
+            color: #94a3b8;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .quote-card {
+            background: rgba(168, 85, 247, 0.1);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 12px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quote-card:hover {
+            background: rgba(168, 85, 247, 0.2);
+            border-color: rgba(168, 85, 247, 0.5);
+            transform: translateX(3px);
+        }
+
+        .quote-card.copied {
+            background: rgba(34, 197, 94, 0.2);
+            border-color: #22c55e;
+        }
+
+        .quote-text {
+            color: #e2e8f0;
+            font-style: italic;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 10px;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .quote-text::before {
+            content: '"';
+            position: absolute;
+            left: 0;
+            top: -5px;
+            font-size: 24px;
+            color: #a855f7;
+        }
+
+        .quote-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        .quality-score {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .metric-card {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .metric-card:hover {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: rgba(59, 130, 246, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .metric-value {
+            color: #60a5fa;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            color: #94a3b8;
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .integration-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 15px;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .integration-status:hover {
+            background: rgba(34, 197, 94, 0.2);
+            border-color: rgba(34, 197, 94, 0.5);
+        }
+
+        .status-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #22c55e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: white;
+        }
+
+        .export-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .export-btn {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 10px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .export-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+        }
+
+        .export-btn:active {
+            transform: translateY(0);
+        }
+
+        .export-btn.success {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+        }
+
+        .export-btn.processing {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            cursor: not-allowed;
+        }
+
+        .transcript-panel {
+            background: #1e293b;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            margin-top: 20px;
+            max-height: 300px;
+            overflow: hidden;
+        }
+
+        .transcript-header {
+            background: #0f172a;
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: #60a5fa;
+            font-weight: 600;
+        }
+
+        .transcript-content {
+            padding: 20px;
+            max-height: 220px;
+            overflow-y: auto;
+        }
+
+        .transcript-entry {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .transcript-entry:hover {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            padding: 10px;
+        }
+
+        .transcript-timestamp {
+            color: #3b82f6;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .transcript-speaker {
+            color: #22c55e;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .transcript-text {
+            color: #e2e8f0;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .highlight {
+            background: rgba(239, 68, 68, 0.3);
+            padding: 2px 4px;
+            border-radius: 3px;
+            color: #fecaca;
+        }
+
+        .loading-animation {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid #60a5fa;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 8px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .tab-switcher {
+            display: flex;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 4px;
+            margin-bottom: 15px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            color: #94a3b8;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .meeting-selector {
+            margin-bottom: 10px;
+        }
+
+        .meeting-selector select {
+            background: #0f172a;
+            color: #e2e8f0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 14px;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .meeting-selector select:focus {
+            outline: none;
+            border-color: #60a5fa;
+        }
+
+        .story-templates-container {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-content {
+            background: #1e293b;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 600px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            animation: slideInUp 0.3s ease;
+        }
+
+        @keyframes slideInUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            color: #60a5fa;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: #e2e8f0;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(34, 197, 94, 0.4);
+            z-index: 3000;
+            animation: slideInRight 0.3s ease;
+            display: none;
+        }
+
+        .notification.error {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            box-shadow: 0 10px 25px rgba(239, 68, 68, 0.4);
+        }
+
+        /* Share Modal Styles */
+        .share-modal {
+            background: #1e293b;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 25px;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .share-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .share-header h3 {
+            color: #60a5fa;
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .share-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .share-option {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .share-option:hover {
+            background: rgba(96, 165, 250, 0.1);
+            border-color: rgba(96, 165, 250, 0.3);
+        }
+
+        .share-option.selected {
+            background: rgba(96, 165, 250, 0.2);
+            border-color: #60a5fa;
+        }
+
+        .share-option i {
+            color: #60a5fa;
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .share-option-title {
+            color: #e2e8f0;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .share-option-desc {
+            color: #94a3b8;
+            font-size: 12px;
+        }
+
+        .link-container {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 15px;
+        }
+
+        .link-input {
+            background: none;
+            border: none;
+            color: #e2e8f0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            width: 100%;
+            outline: none;
+        }
+
+        .share-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .copy-btn, .qr-btn {
+            flex: 1;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .copy-btn:hover, .qr-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        .copy-btn.success {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+        }
+
+        /* Settings Panel Styles */
+        .settings-panel {
+            background: #1e293b;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 25px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .settings-section {
+            margin-bottom: 25px;
+        }
+
+        .settings-section h4 {
+            color: #60a5fa;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .setting-label {
+            color: #e2e8f0;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .setting-desc {
+            color: #94a3b8;
+            font-size: 12px;
+            margin-top: 2px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .toggle-switch.active {
+            background: #3b82f6;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(20px);
+        }
+
+        .dropdown-select {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            color: #e2e8f0;
+            padding: 6px 10px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .dropdown-select:focus {
+            outline: none;
+            border-color: #60a5fa;
+        }
+
+        /* Advanced UI Elements */
+        .quick-actions {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .quick-action-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .quick-action-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .qa-export {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+        }
+
+        .qa-alert {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+
+        .qa-share {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        }
+
+        .qa-ai {
+            background: linear-gradient(135deg, #a855f7, #7c3aed);
+        }
+
+        /* Enhanced Loading States */
+        .skeleton {
+            background: linear-gradient(90deg,
+                rgba(255, 255, 255, 0.05) 25%,
+                rgba(255, 255, 255, 0.1) 50%,
+                rgba(255, 255, 255, 0.05) 75%);
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s infinite;
+        }
+
+        @keyframes skeleton-loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Advanced Tooltips */
+        .tooltip {
+            position: relative;
+            cursor: help;
+        }
+
+        .tooltip::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .tooltip:hover::after {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(-5px);
+        }
+
+        /* Status Indicators */
+        .connection-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 6px;
+            padding: 6px 10px;
+            margin-left: 15px;
+        }
+
+        .connection-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #22c55e;
+            animation: pulse 2s infinite;
+        }
+
+        .connection-text {
+            color: #22c55e;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        @media (max-width: 1200px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">
+                <h1>CivicScoop</h1>
+                <span class="pro-badge">Civic Intelligence Pro</span>
+                <span class="version-badge">v2.1.4</span>
+            </div>
+            <div class="header-controls">
+                <div class="user-info">
+                    <div class="user-avatar">JR</div>
+                    <div class="user-details">
+                        <div class="user-name">John Reporter</div>
+                        <div class="user-role">Senior Correspondent</div>
+                    </div>
+                </div>
+                <button class="share-btn" onclick="showShareModal()"><i class="fas fa-share"></i> Share Session</button>
+                <button class="settings-btn" onclick="showSettings()"><i class="fas fa-cog"></i></button>
+            </div>
+            <div class="status-indicator">
+                <div class="live-dot"></div>
+                <span id="liveStatus">Live Analysis Active</span>
+                <span class="session-id">Session: #CIV-2025-1202-003</span>
+                <button class="back-to-dashboard" onclick="window.open('CivicScoop_Dashboard.html', '_self')">
+                    <i class="fas fa-arrow-left"></i> Dashboard
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-layout">
+        <div class="video-section">
+            <div class="video-header">
+                <div class="meeting-selector">
+                    <select id="meetingSelect" onchange="switchMeeting()">
+                        <option value="austin-housing">Austin City Council: Affordable Housing Crisis</option>
+                        <option value="seattle-budget">Seattle City Council: 2025 Budget Approval</option>
+                        <option value="miami-climate">Miami-Dade: Climate Resilience Planning</option>
+                        <option value="denver-transit">Denver City Council: Public Transit Expansion</option>
+                    </select>
+                </div>
+                <div class="video-title" id="videoTitle">Austin City Council Meeting: Affordable Housing Crisis</div>
+                <div class="video-meta">
+                    <span><i class="fas fa-calendar"></i> <span id="meetingDate">December 2, 2025, 2:00 PM</span></span>
+                    <span><i class="fas fa-clock"></i> <span id="totalDuration">4:12:34</span></span>
+                    <span><i class="fas fa-users"></i> <span id="participantCount">67</span> participants</span>
+                </div>
+            </div>
+
+            <div class="video-player" onclick="togglePlayPause()">
+                <div style="text-align: center; color: #94a3b8;">
+                    <i class="fas fa-video" style="font-size: 48px; margin-bottom: 15px; opacity: 0.5;"></i>
+                    <div style="font-size: 18px; font-weight: 600;">Austin City Council - Affordable Housing Discussion</div>
+                    <div style="font-size: 14px; margin-top: 8px;">Current controversy level: <span id="controversyLevel">HIGH</span></div>
+                </div>
+
+                <div class="video-controls">
+                    <div class="timeline-container">
+                        <div class="timeline" onclick="seekTo(event)">
+                            <div class="timeline-progress" id="timelineProgress"></div>
+                            <div class="timeline-markers">
+                                <div class="timeline-marker marker-heated" title="Heated Discussion: Housing developer backlash" onclick="jumpToMoment(15)"></div>
+                                <div class="timeline-marker marker-controversial" title="Controversial Statement: Council member opposes low-income housing" onclick="jumpToMoment(45)"></div>
+                                <div class="timeline-marker marker-breaking" title="BREAKING: Protest eruption during public comment" onclick="jumpToMoment(67)"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="playback-controls">
+                        <button class="play-btn" id="playButton" onclick="togglePlayPause()"><i class="fas fa-play"></i></button>
+                        <span class="time-display" id="timeDisplay">3:47:23 / 4:12:34</span>
+                        <div style="flex: 1;"></div>
+                        <span style="font-size: 12px; color: #ef4444;">🔴 LIVE ANALYSIS</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="engagement-panel">
+                <div class="engagement-title">Real-Time Engagement Timeline</div>
+                <div class="engagement-timeline">
+                    <div class="engagement-bars" id="engagementBars">
+                        <!-- Engagement bars will be generated dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="features-sidebar">
+            <!-- Citizen Engagement Panel -->
+            <div class="feature-panel">
+                <div class="panel-header">
+                    <i class="fas fa-users"></i>
+                    Live Citizen Engagement
+                    <div class="loading-animation"></div>
+                </div>
+                <div class="panel-content">
+                    <div class="tab-switcher">
+                        <button class="tab-btn active" onclick="switchEngagementTab('feedback')">Public Feedback</button>
+                        <button class="tab-btn" onclick="switchEngagementTab('polls')">Live Polls</button>
+                        <button class="tab-btn" onclick="switchEngagementTab('questions')">Q&A Queue</button>
+                    </div>
+
+                    <div id="feedback" class="tab-content active">
+                        <div class="engagement-item">
+                            <div class="engagement-meta">
+                                <span class="user-location">District 3 • 2 min ago</span>
+                                <span class="sentiment-badge positive">👍 Supportive</span>
+                            </div>
+                            <div class="engagement-text">"We need affordable housing NOW. Thank you Council for prioritizing this issue."</div>
+                            <div class="engagement-actions">
+                                <button onclick="moderateContent(this, 'approve')" class="mod-btn approve"><i class="fas fa-check"></i></button>
+                                <button onclick="moderateContent(this, 'highlight')" class="mod-btn highlight"><i class="fas fa-star"></i></button>
+                            </div>
+                        </div>
+                        <div class="engagement-item">
+                            <div class="engagement-meta">
+                                <span class="user-location">District 7 • 4 min ago</span>
+                                <span class="sentiment-badge negative">👎 Critical</span>
+                            </div>
+                            <div class="engagement-text">"This will destroy our neighborhood character. Where's the parking study?"</div>
+                            <div class="engagement-actions">
+                                <button onclick="moderateContent(this, 'approve')" class="mod-btn approve"><i class="fas fa-check"></i></button>
+                                <button onclick="moderateContent(this, 'flag')" class="mod-btn flag"><i class="fas fa-flag"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="polls" class="tab-content">
+                        <div class="live-poll">
+                            <div class="poll-question">"Should the city prioritize affordable housing over parking requirements?"</div>
+                            <div class="poll-results">
+                                <div class="poll-option">
+                                    <span>Yes, housing is priority</span>
+                                    <div class="poll-bar" style="width: 67%">67%</div>
+                                </div>
+                                <div class="poll-option">
+                                    <span>No, parking is essential</span>
+                                    <div class="poll-bar" style="width: 28%">28%</div>
+                                </div>
+                                <div class="poll-option">
+                                    <span>Need both solutions</span>
+                                    <div class="poll-bar" style="width: 5%">5%</div>
+                                </div>
+                            </div>
+                            <div class="poll-meta">🗳️ 847 votes • Live results</div>
+                        </div>
+                    </div>
+
+                    <div id="questions" class="tab-content">
+                        <div class="question-queue">
+                            <div class="queued-question priority-high">
+                                <div class="question-text">"What's the timeline for affordable housing development?"</div>
+                                <div class="question-meta">📍 District 5 • 🔥 Top voted (23 votes)</div>
+                            </div>
+                            <div class="queued-question priority-medium">
+                                <div class="question-text">"How will this impact existing residents?"</div>
+                                <div class="question-meta">📍 District 3 • 👍 Moderate (8 votes)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Breaking News Alerts Panel -->
+            <div class="feature-panel">
+                <div class="panel-header">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Breaking News Alerts
+                    <div class="loading-animation"></div>
+                </div>
+                <div class="panel-content" id="alertsContainer">
+                    <!-- Alerts will be added dynamically -->
+                </div>
+            </div>
+
+            <!-- Story Generator Panel -->
+            <div class="feature-panel">
+                <div class="panel-header">
+                    <i class="fas fa-file-text"></i>
+                    AI Story Generator
+                </div>
+                <div class="panel-content">
+                    <div class="tab-switcher">
+                        <button class="tab-btn active" onclick="switchStoryTab('packages')">Packages</button>
+                        <button class="tab-btn" onclick="switchStoryTab('social')">Social</button>
+                        <button class="tab-btn" onclick="switchStoryTab('headlines')">Headlines</button>
+                    </div>
+
+                    <div id="packages" class="tab-content active">
+                        <div class="story-templates-container" id="packagesContainer">
+                            <div class="story-template" onclick="selectStory(this, '60-Second Package')">
+                                <div class="story-type">60-Second Package</div>
+                                <div class="story-headline">Austin Council Meeting Erupts Over Housing Crisis</div>
+                                <div class="story-description">Lead: Protesters disrupt council session as affordable housing debate intensifies. Includes soundbites from both sides and council member controversy.</div>
+                            </div>
+                            <div class="story-template" onclick="selectStory(this, '90-Second Deep Dive')">
+                                <div class="story-type">90-Second Deep Dive</div>
+                                <div class="story-headline">Housing Development Sparks Heated City Council Debate</div>
+                                <div class="story-description">Focus: Developer threats, community opposition, and political tensions over proposed low-income housing project.</div>
+                            </div>
+                            <div class="story-template" onclick="selectStory(this, 'Breaking News Brief')">
+                                <div class="story-type">Breaking News Brief</div>
+                                <div class="story-headline">BREAKING: Austin Council Session Disrupted by Housing Protesters</div>
+                                <div class="story-description">Urgent: Live coverage of ongoing disruption during public comment period.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="social" class="tab-content">
+                        <div class="story-templates-container" id="socialContainer">
+                            <div class="story-template" onclick="selectStory(this, 'Twitter Thread')">
+                                <div class="story-type">Twitter Thread</div>
+                                <div class="story-headline">🧵 THREAD: Austin housing crisis reaches boiling point</div>
+                                <div class="story-description">5-tweet thread covering key moments, quotes, and context from today's heated council meeting.</div>
+                            </div>
+                            <div class="story-template" onclick="selectStory(this, 'Instagram Story')">
+                                <div class="story-type">Instagram Story</div>
+                                <div class="story-headline">📱 Behind-the-scenes at Austin Council chaos</div>
+                                <div class="story-description">Visual story with key quotes, crowd reactions, and council member responses.</div>
+                            </div>
+                            <div class="story-template" onclick="selectStory(this, 'TikTok Clip')">
+                                <div class="story-type">TikTok Clip</div>
+                                <div class="story-headline">⚡ "This will destroy property values" - Council drama</div>
+                                <div class="story-description">60-second highlight reel of most controversial moments with captions.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="headlines" class="tab-content">
+                        <div class="story-templates-container" id="headlinesContainer">
+                            <div class="story-template" onclick="selectStory(this, 'Lead Story')">
+                                <div class="story-type">Lead Story</div>
+                                <div class="story-headline">Austin Council Session Erupts in Housing Crisis Showdown</div>
+                                <div class="story-description">Emphasizes conflict and community division</div>
+                            </div>
+                            <div class="story-template" onclick="selectStory(this, 'Alternative Angle')">
+                                <div class="story-type">Alternative Angle</div>
+                                <div class="story-headline">Affordable Housing Debate Exposes Deep Community Divisions</div>
+                                <div class="story-description">Focus on underlying social issues</div>
+                            </div>
+                            <div class="story-template" onclick="selectStory(this, 'Impact Focus')">
+                                <div class="story-type">Impact Focus</div>
+                                <div class="story-headline">Housing Crisis Forces Austin to Confront Gentrification Reality</div>
+                                <div class="story-description">Broader context and long-term implications</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="export-buttons">
+                        <button class="export-btn" onclick="exportToENPS()"><i class="fas fa-tv"></i> Export to ENPS</button>
+                        <button class="export-btn" onclick="pushToSocial()"><i class="fas fa-share"></i> Push to Social</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quote Extraction Panel -->
+            <div class="feature-panel">
+                <div class="panel-header">
+                    <i class="fas fa-quote-right"></i>
+                    Smart Quote Extraction
+                </div>
+                <div class="panel-content" id="quotesContainer">
+                    <div class="quote-card" onclick="copyQuote(this)">
+                        <div class="quote-text">This low-income housing will absolutely destroy property values in this district. We cannot allow this to happen to our neighborhood.</div>
+                        <div class="quote-meta">
+                            <span>Councilman Robert Chen | 3:23:15</span>
+                            <span class="quality-score">98%</span>
+                        </div>
+                    </div>
+                    <div class="quote-card" onclick="copyQuote(this)">
+                        <div class="quote-text">You're talking about human beings who need shelter, not property values! This is exactly the problem with this council!</div>
+                        <div class="quote-meta">
+                            <span>Maria Rodriguez, Activist | 3:24:42</span>
+                            <span class="quality-score">95%</span>
+                        </div>
+                    </div>
+                    <div class="quote-card" onclick="copyQuote(this)">
+                        <div class="quote-text">If this ordinance passes as written, we will pursue legal action immediately. This is governmental overreach.</div>
+                        <div class="quote-meta">
+                            <span>James Mitchell, Developer | 2:56:42</span>
+                            <span class="quality-score">92%</span>
+                        </div>
+                    </div>
+                    <div class="export-buttons">
+                        <button class="export-btn" onclick="createVideoClips()"><i class="fas fa-video"></i> Create Clips</button>
+                        <button class="export-btn" onclick="addToScript()"><i class="fas fa-edit"></i> Add to Script</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Panel -->
+            <div class="feature-panel">
+                <div class="panel-header">
+                    <i class="fas fa-chart-line"></i>
+                    Performance Analytics
+                </div>
+                <div class="panel-content">
+                    <div class="analytics-grid">
+                        <div class="metric-card" onclick="showAnalyticsDetail('viral')">
+                            <div class="metric-value" id="viralPotential">94%</div>
+                            <div class="metric-label">Viral Potential</div>
+                        </div>
+                        <div class="metric-card" onclick="showAnalyticsDetail('shares')">
+                            <div class="metric-value" id="estimatedShares">12.7K</div>
+                            <div class="metric-label">Est. Shares</div>
+                        </div>
+                        <div class="metric-card" onclick="showAnalyticsDetail('controversy')">
+                            <div class="metric-value" id="controversyScore">8.2</div>
+                            <div class="metric-label">Controversy Score</div>
+                        </div>
+                        <div class="metric-card" onclick="showAnalyticsDetail('mentions')">
+                            <div class="metric-value" id="mediaMentions">156</div>
+                            <div class="metric-label">Media Mentions</div>
+                        </div>
+                    </div>
+                    <div style="background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 8px; padding: 15px; margin: 15px 0;">
+                        <strong style="color: #22c55e;">🎯 CIVIC ENGAGEMENT INSIGHT</strong><br>
+                        <span style="font-size: 14px; color: #e2e8f0;">847 citizens actively participating. 67% support housing priority. Story accuracy verified by official government partnership. Ready for multilingual distribution.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Government Partnership Portal -->
+            <div class="feature-panel">
+                <div class="panel-header">
+                    <i class="fas fa-building"></i>
+                    Government Partnership
+                </div>
+                <div class="panel-content">
+                    <div class="partnership-status active">
+                        <div class="partnership-header">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>City of Austin - Verified Partner</span>
+                            <span class="verification-badge">✓</span>
+                        </div>
+                        <div class="partnership-details">
+                            <div class="detail-item">
+                                <span>📋 Official Transcripts: Enabled</span>
+                            </div>
+                            <div class="detail-item">
+                                <span>📊 Real-time Data Feed: Active</span>
+                            </div>
+                            <div class="detail-item">
+                                <span>🗳️ Citizen Feedback: Monitored</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accuracy-metrics">
+                        <div class="metric-row">
+                            <span>AI Accuracy Rate:</span>
+                            <span class="accuracy-score">98.7%</span>
+                        </div>
+                        <div class="metric-row">
+                            <span>Fact-Check Verification:</span>
+                            <span class="verification-score">100%</span>
+                        </div>
+                        <div class="metric-row">
+                            <span>Source Attribution:</span>
+                            <span class="attribution-score">99.2%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Multi-Platform Distribution -->
+            <div class="feature-panel">
+                <div class="panel-header">
+                    <i class="fas fa-share-alt"></i>
+                    Content Distribution
+                </div>
+                <div class="panel-content">
+                    <div class="distribution-channels">
+                        <div class="channel-item active">
+                            <i class="fas fa-tv"></i>
+                            <span>Local TV Networks</span>
+                            <div class="channel-status">3 stations connected</div>
+                        </div>
+                        <div class="channel-item active">
+                            <i class="fas fa-newspaper"></i>
+                            <span>Print Media</span>
+                            <div class="channel-status">2 papers syndicated</div>
+                        </div>
+                        <div class="channel-item active">
+                            <i class="fas fa-podcast"></i>
+                            <span>Podcast Networks</span>
+                            <div class="channel-status">Auto-transcription</div>
+                        </div>
+                        <div class="channel-item pending">
+                            <i class="fas fa-globe"></i>
+                            <span>Multilingual Distribution</span>
+                            <div class="channel-status">Spanish, Korean ready</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Integration Status Panel -->
+            <div class="feature-panel">
+                <div class="panel-header">
+                    <i class="fas fa-plug"></i>
+                    Newsroom Integration
+                </div>
+                <div class="panel-content">
+                    <div class="integration-status" onclick="viewIntegrationDetails('enps')">
+                        <div class="status-icon"><i class="fas fa-check"></i></div>
+                        <div>
+                            <div style="font-weight: 600; color: #e2e8f0;">Multi-platform Syndication</div>
+                            <div style="font-size: 12px; color: #94a3b8;">Citizen feedback integrated</div>
+                        </div>
+                    </div>
+                    <div class="integration-status" onclick="viewIntegrationDetails('inews')">
+                        <div class="status-icon"><i class="fas fa-check"></i></div>
+                        <div>
+                            <div style="font-weight: 600; color: #e2e8f0;">Government Partnership</div>
+                            <div style="font-size: 12px; color: #94a3b8;">Verified data feed active</div>
+                        </div>
+                    </div>
+                    <div class="integration-status" onclick="viewIntegrationDetails('social')">
+                        <div class="status-icon"><i class="fas fa-check"></i></div>
+                        <div>
+                            <div style="font-weight: 600; color: #e2e8f0;">Multilingual Distribution</div>
+                            <div style="font-size: 12px; color: #94a3b8;">Spanish, Korean ready</div>
+                        </div>
+                    </div>
+                    <div class="integration-status" onclick="viewIntegrationDetails('video')">
+                        <div class="status-icon"><i class="fas fa-sync fa-spin"></i></div>
+                        <div>
+                            <div style="font-weight: 600; color: #e2e8f0;">Video Edit Suite</div>
+                            <div style="font-size: 12px; color: #94a3b8;">Processing highlights...</div>
+                        </div>
+                    </div>
+                    <div class="export-buttons">
+                        <button class="export-btn" onclick="sendToNewsroom()"><i class="fas fa-paper-plane"></i> Send to Newsroom</button>
+                        <button class="export-btn" onclick="scheduleBroadcast()"><i class="fas fa-calendar"></i> Schedule Broadcast</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transcript Panel -->
+    <div style="max-width: 1400px; margin: 0 auto; padding: 0 30px;">
+        <div class="transcript-panel">
+            <div class="transcript-header">
+                <i class="fas fa-file-alt"></i> Live Transcript with AI Analysis
+            </div>
+            <div class="transcript-content" id="transcriptContainer">
+                <div class="transcript-entry" onclick="jumpToTranscriptTime('3:47:23')">
+                    <div class="transcript-timestamp">3:47:23</div>
+                    <div class="transcript-speaker">Councilman Robert Chen</div>
+                    <div class="transcript-text">This <span class="highlight">low-income housing will absolutely destroy property values</span> in this district. We cannot allow this to happen to our neighborhood. The residents elected me to protect their investments.</div>
+                </div>
+                <div class="transcript-entry" onclick="jumpToTranscriptTime('3:48:01')">
+                    <div class="transcript-timestamp">3:48:01</div>
+                    <div class="transcript-speaker">Maria Rodriguez (Public Comment)</div>
+                    <div class="transcript-text">You're talking about <span class="highlight">human beings who need shelter, not property values!</span> This is exactly the problem with this council. You care more about money than people.</div>
+                </div>
+                <div class="transcript-entry" onclick="jumpToTranscriptTime('3:48:15')">
+                    <div class="transcript-timestamp">3:48:15</div>
+                    <div class="transcript-speaker">Mayor Sarah Johnson</div>
+                    <div class="transcript-text">Please maintain order in the chamber. We need to have a respectful dialogue about this important issue affecting our entire community.</div>
+                </div>
+                <div class="transcript-entry" onclick="jumpToTranscriptTime('3:48:32')">
+                    <div class="transcript-timestamp">3:48:32</div>
+                    <div class="transcript-speaker">Multiple Voices (Crowd)</div>
+                    <div class="transcript-text"><span class="highlight">[SHOUTING] "Shame on this council!" "Housing is a human right!" "We demand action now!"</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Details</h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div id="modalBody">
+                <!-- Modal content will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Share Modal -->
+    <div id="shareModal" class="modal">
+        <div class="modal-content share-modal">
+            <div class="share-header">
+                <i class="fas fa-share"></i>
+                <h3>Share Live Session</h3>
+                <button class="close-btn" onclick="closeShareModal()" style="margin-left: auto;">&times;</button>
+            </div>
+            <div class="share-options">
+                <div class="share-option selected" onclick="selectShareOption(this, 'view-only')">
+                    <i class="fas fa-eye"></i>
+                    <div class="share-option-title">View Only</div>
+                    <div class="share-option-desc">Read-only access</div>
+                </div>
+                <div class="share-option" onclick="selectShareOption(this, 'collaborate')">
+                    <i class="fas fa-users"></i>
+                    <div class="share-option-title">Collaborate</div>
+                    <div class="share-option-desc">Full editor access</div>
+                </div>
+                <div class="share-option" onclick="selectShareOption(this, 'embed')">
+                    <i class="fas fa-code"></i>
+                    <div class="share-option-title">Embed</div>
+                    <div class="share-option-desc">Website integration</div>
+                </div>
+                <div class="share-option" onclick="selectShareOption(this, 'export')">
+                    <i class="fas fa-download"></i>
+                    <div class="share-option-title">Export</div>
+                    <div class="share-option-desc">Download package</div>
+                </div>
+            </div>
+            <div class="link-container">
+                <input type="text" class="link-input" id="shareLink" value="https://civicscoop.pro/live/CIV-2025-1202-003?access=view-only" readonly>
+            </div>
+            <div class="share-actions">
+                <button class="copy-btn" onclick="copyShareLink()"><i class="fas fa-copy"></i> Copy Link</button>
+                <button class="qr-btn" onclick="showQRCode()"><i class="fas fa-qrcode"></i> QR Code</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content settings-panel">
+            <div class="modal-header">
+                <h3>CivicScoop Settings</h3>
+                <button class="close-btn" onclick="closeSettingsModal()">&times;</button>
+            </div>
+            <div class="settings-section">
+                <h4><i class="fas fa-video"></i> Analysis Settings</h4>
+                <div class="setting-item">
+                    <div>
+                        <div class="setting-label">Real-time Transcription</div>
+                        <div class="setting-desc">Live speech-to-text analysis</div>
+                    </div>
+                    <div class="toggle-switch active" onclick="toggleSetting(this)"><div class="toggle-slider"></div></div>
+                </div>
+                <div class="setting-item">
+                    <div>
+                        <div class="setting-label">Sentiment Analysis</div>
+                        <div class="setting-desc">AI-powered emotion detection</div>
+                    </div>
+                    <div class="toggle-switch active" onclick="toggleSetting(this)"><div class="toggle-slider"></div></div>
+                </div>
+                <div class="setting-item">
+                    <div>
+                        <div class="setting-label">Quote Extraction</div>
+                        <div class="setting-desc">Automatic soundbite identification</div>
+                    </div>
+                    <div class="toggle-switch active" onclick="toggleSetting(this)"><div class="toggle-slider"></div></div>
+                </div>
+                <div class="setting-item">
+                    <div>
+                        <div class="setting-label">Controversy Detection</div>
+                        <div class="setting-desc">Highlight heated discussions</div>
+                    </div>
+                    <div class="toggle-switch active" onclick="toggleSetting(this)"><div class="toggle-slider"></div></div>
+                </div>
+            </div>
+            <div class="settings-section">
+                <h4><i class="fas fa-bell"></i> Notifications</h4>
+                <div class="setting-item">
+                    <div>
+                        <div class="setting-label">Breaking Alerts</div>
+                        <div class="setting-desc">High-priority story notifications</div>
+                    </div>
+                    <div class="toggle-switch active" onclick="toggleSetting(this)"><div class="toggle-slider"></div></div>
+                </div>
+                <div class="setting-item">
+                    <div>
+                        <div class="setting-label">Citizen Engagement</div>
+                        <div class="setting-desc">Public feedback notifications</div>
+                    </div>
+                    <div class="toggle-switch active" onclick="toggleSetting(this)"><div class="toggle-slider"></div></div>
+                </div>
+                <div class="setting-item">
+                    <div>
+                        <div class="setting-label">Export Ready</div>
+                        <div class="setting-desc">Story package completion alerts</div>
+                    </div>
+                    <div class="toggle-switch" onclick="toggleSetting(this)"><div class="toggle-slider"></div></div>
+                </div>
+            </div>
+            <div class="settings-section">
+                <h4><i class="fas fa-cog"></i> Output Settings</h4>
+                <div class="setting-item">
+                    <div>
+                        <div class="setting-label">Default Export Format</div>
+                        <div class="setting-desc">Primary story template</div>
+                    </div>
+                    <select class="dropdown-select">
+                        <option>60-Second Package</option>
+                        <option>90-Second Deep Dive</option>
+                        <option>Breaking News Brief</option>
+                    </select>
+                </div>
+                <div class="setting-item">
+                    <div>
+                        <div class="setting-label">Video Quality</div>
+                        <div class="setting-desc">Clip export resolution</div>
+                    </div>
+                    <select class="dropdown-select">
+                        <option>4K (2160p)</option>
+                        <option>HD (1080p)</option>
+                        <option>SD (720p)</option>
+                    </select>
+                </div>
+                <div class="setting-item">
+                    <div>
+                        <div class="setting-label">Auto-Save</div>
+                        <div class="setting-desc">Automatic session backup</div>
+                    </div>
+                    <div class="toggle-switch active" onclick="toggleSetting(this)"><div class="toggle-slider"></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions Panel -->
+    <div class="quick-actions">
+        <button class="quick-action-btn qa-ai tooltip" data-tooltip="AI Assistant" onclick="showAIAssistant()"><i class="fas fa-robot"></i></button>
+        <button class="quick-action-btn qa-export tooltip" data-tooltip="Quick Export" onclick="quickExport()"><i class="fas fa-download"></i></button>
+        <button class="quick-action-btn qa-alert tooltip" data-tooltip="Send Alert" onclick="sendBreakingAlert()"><i class="fas fa-bell"></i></button>
+        <button class="quick-action-btn qa-share tooltip" data-tooltip="Share Live" onclick="showShareModal()"><i class="fas fa-share"></i></button>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification">
+        <i class="fas fa-check"></i>
+        <span id="notificationText">Action completed successfully!</span>
+    </div>
+
+    <script>
+        // Global state
+        let isPlaying = false;
+        let currentTime = 0;
+        let totalTime = 252; // 4:12 in minutes
+        let selectedStory = null;
+        let currentMeeting = 'austin-housing';
+
+        // Meeting data
+        const meetingData = {
+            'austin-housing': {
+                title: 'Austin City Council Meeting: Affordable Housing Crisis',
+                date: 'December 2, 2025, 2:00 PM',
+                duration: '4:12:34',
+                participants: 67,
+                controversyLevel: 'HIGH',
+                packages: [
+                    {
+                        type: '60-Second Package',
+                        headline: 'Austin Council Meeting Erupts Over Housing Crisis',
+                        description: 'Lead: Protesters disrupt council session as affordable housing debate intensifies. Includes soundbites from both sides and council member controversy.'
+                    },
+                    {
+                        type: '90-Second Deep Dive',
+                        headline: 'Housing Development Sparks Heated City Council Debate',
+                        description: 'Focus: Developer threats, community opposition, and political tensions over proposed low-income housing project.'
+                    },
+                    {
+                        type: 'Breaking News Brief',
+                        headline: 'BREAKING: Austin Council Session Disrupted by Housing Protesters',
+                        description: 'Urgent: Live coverage of ongoing disruption during public comment period.'
+                    }
+                ],
+                social: [
+                    {
+                        type: 'Twitter Thread',
+                        headline: '🧵 THREAD: Austin housing crisis reaches boiling point',
+                        description: '5-tweet thread covering key moments, quotes, and context from today\'s heated council meeting.'
+                    },
+                    {
+                        type: 'Instagram Story',
+                        headline: '📱 Behind-the-scenes at Austin Council chaos',
+                        description: 'Visual story with key quotes, crowd reactions, and council member responses.'
+                    },
+                    {
+                        type: 'TikTok Clip',
+                        headline: '⚡ "This will destroy property values" - Council drama',
+                        description: '60-second highlight reel of most controversial moments with captions.'
+                    }
+                ],
+                headlines: [
+                    {
+                        type: 'Lead Story',
+                        headline: 'Austin Council Session Erupts in Housing Crisis Showdown',
+                        description: 'Emphasizes conflict and community division'
+                    },
+                    {
+                        type: 'Alternative Angle',
+                        headline: 'Affordable Housing Debate Exposes Deep Community Divisions',
+                        description: 'Focus on underlying social issues'
+                    },
+                    {
+                        type: 'Impact Focus',
+                        headline: 'Housing Crisis Forces Austin to Confront Gentrification Reality',
+                        description: 'Broader context and long-term implications'
+                    }
+                ],
+                quotes: [
+                    {
+                        text: 'This low-income housing will absolutely destroy property values in this district. We cannot allow this to happen to our neighborhood.',
+                        speaker: 'Councilman Robert Chen',
+                        timestamp: '3:23:15',
+                        quality: '98%'
+                    },
+                    {
+                        text: 'You\'re talking about human beings who need shelter, not property values! This is exactly the problem with this council!',
+                        speaker: 'Maria Rodriguez, Activist',
+                        timestamp: '3:24:42',
+                        quality: '95%'
+                    },
+                    {
+                        text: 'If this ordinance passes as written, we will pursue legal action immediately. This is governmental overreach.',
+                        speaker: 'James Mitchell, Developer',
+                        timestamp: '2:56:42',
+                        quality: '92%'
+                    }
+                ]
+            },
+            'seattle-budget': {
+                title: 'Seattle City Council: 2025 Budget Approval',
+                date: 'November 28, 2025, 1:30 PM',
+                duration: '3:45:22',
+                participants: 89,
+                controversyLevel: 'MEDIUM',
+                packages: [
+                    {
+                        type: '60-Second Package',
+                        headline: 'Seattle Approves $7.6B Budget Amid Public Safety Debate',
+                        description: 'Council votes 7-2 to approve controversial budget including increased police funding and homeless services expansion.'
+                    },
+                    {
+                        type: '90-Second Deep Dive',
+                        headline: 'Budget Battle Reveals Seattle\'s Priorities for 2025',
+                        description: 'Analysis: How the budget reflects competing visions for public safety, housing, and climate investments.'
+                    },
+                    {
+                        type: 'Breaking News Brief',
+                        headline: 'Seattle Council Passes Budget Despite Progressive Opposition',
+                        description: 'Last-minute negotiations secure budget approval with concessions on police reform measures.'
+                    }
+                ],
+                social: [
+                    {
+                        type: 'Twitter Thread',
+                        headline: '🧵 Seattle\'s $7.6B budget breakdown: What it means for you',
+                        description: '8-tweet thread explaining key budget items, tax implications, and service changes for residents.'
+                    },
+                    {
+                        type: 'Instagram Story',
+                        headline: '💰 Seattle budget vote: By the numbers',
+                        description: 'Infographic story breaking down spending categories and council vote breakdown.'
+                    },
+                    {
+                        type: 'TikTok Clip',
+                        headline: '⚡ "We can\'t defund our way to safety" - Council moment',
+                        description: 'Key debate moments on police funding with context and community reactions.'
+                    }
+                ],
+                headlines: [
+                    {
+                        type: 'Lead Story',
+                        headline: 'Seattle City Council Approves $7.6 Billion Budget in Close Vote',
+                        description: 'Focus on the final vote and key provisions'
+                    },
+                    {
+                        type: 'Alternative Angle',
+                        headline: 'Budget Compromise Balances Public Safety and Social Services',
+                        description: 'Emphasis on negotiations and middle-ground approach'
+                    },
+                    {
+                        type: 'Impact Focus',
+                        headline: 'New Seattle Budget Sets Stage for 2025 Policy Battles',
+                        description: 'Forward-looking analysis of political implications'
+                    }
+                ],
+                quotes: [
+                    {
+                        text: 'This budget reflects our commitment to both public safety and social justice. We\'ve found a balanced path forward.',
+                        speaker: 'Councilwoman Teresa Mosqueda',
+                        timestamp: '2:34:17',
+                        quality: '97%'
+                    },
+                    {
+                        text: 'We\'re throwing money at the same failed policies while our streets remain unsafe. This is fiscal irresponsibility.',
+                        speaker: 'Councilman Alex Pedersen',
+                        timestamp: '2:45:08',
+                        quality: '94%'
+                    },
+                    {
+                        text: 'Every dollar we invest in housing prevention saves us three dollars in emergency response. This is smart budgeting.',
+                        speaker: 'Budget Director Ben Noble',
+                        timestamp: '1:56:33',
+                        quality: '96%'
+                    }
+                ]
+            },
+            'miami-climate': {
+                title: 'Miami-Dade: Climate Resilience Planning',
+                date: 'December 1, 2025, 10:00 AM',
+                duration: '2:28:45',
+                participants: 52,
+                controversyLevel: 'LOW',
+                packages: [
+                    {
+                        type: '60-Second Package',
+                        headline: 'Miami-Dade Unveils $2B Climate Resilience Master Plan',
+                        description: 'County approves comprehensive plan addressing sea level rise, flooding, and extreme weather preparedness.'
+                    },
+                    {
+                        type: '90-Second Deep Dive',
+                        headline: 'How Miami-Dade Plans to Survive Rising Seas',
+                        description: 'Detailed look at infrastructure investments, community relocation, and innovative flood control measures.'
+                    },
+                    {
+                        type: 'Breaking News Brief',
+                        headline: 'Miami-Dade Commits $2B to Climate Defense Infrastructure',
+                        description: 'Unanimous vote approves ambitious climate adaptation strategy with federal funding support.'
+                    }
+                ],
+                social: [
+                    {
+                        type: 'Twitter Thread',
+                        headline: '🌊 Miami\'s $2B plan to fight rising seas: Thread',
+                        description: '6-tweet breakdown of the climate resilience plan and timeline for implementation.'
+                    },
+                    {
+                        type: 'Instagram Story',
+                        headline: '🏖️ Saving Miami: Climate action in progress',
+                        description: 'Visual timeline of planned infrastructure projects with before/after renderings.'
+                    },
+                    {
+                        type: 'TikTok Clip',
+                        headline: '🌊 Why Miami is building a wall against the ocean',
+                        description: 'Quick explainer of sea level rise threats and planned solutions.'
+                    }
+                ],
+                headlines: [
+                    {
+                        type: 'Lead Story',
+                        headline: 'Miami-Dade Approves $2 Billion Climate Resilience Plan',
+                        description: 'Straightforward announcement of the plan approval'
+                    },
+                    {
+                        type: 'Alternative Angle',
+                        headline: 'South Florida Takes Bold Action Against Climate Change',
+                        description: 'Regional leadership and proactive approach angle'
+                    },
+                    {
+                        type: 'Impact Focus',
+                        headline: 'Miami Plan Could Become Model for Coastal Climate Adaptation',
+                        description: 'National significance and replicability focus'
+                    }
+                ],
+                quotes: [
+                    {
+                        text: 'We cannot wait for the federal government. Miami-Dade will lead the nation in climate adaptation and resilience.',
+                        speaker: 'Mayor Daniella Levine Cava',
+                        timestamp: '1:12:45',
+                        quality: '99%'
+                    },
+                    {
+                        text: 'This plan will save lives and protect billions in property value. The cost of inaction far exceeds the cost of action.',
+                        speaker: 'Commissioner Raquel Regalado',
+                        timestamp: '1:34:22',
+                        quality: '97%'
+                    },
+                    {
+                        text: 'We\'re not just building sea walls, we\'re building a sustainable future for our children and grandchildren.',
+                        speaker: 'Dr. Jennifer Jurado, Chief Climate Officer',
+                        timestamp: '2:08:15',
+                        quality: '98%'
+                    }
+                ]
+            },
+            'denver-transit': {
+                title: 'Denver City Council: Public Transit Expansion',
+                date: 'November 30, 2025, 6:00 PM',
+                duration: '5:23:18',
+                participants: 134,
+                controversyLevel: 'HIGH',
+                packages: [
+                    {
+                        type: '60-Second Package',
+                        headline: 'Denver Council Deadlocks on $4B Transit Expansion Plan',
+                        description: 'Heated 5-hour debate ends without resolution as council splits 6-6 on ambitious light rail project.'
+                    },
+                    {
+                        type: '90-Second Deep Dive',
+                        headline: 'Transit Wars: Denver Divided on Future of Public Transportation',
+                        description: 'Analysis of the political, economic, and environmental factors driving the transit expansion debate.'
+                    },
+                    {
+                        type: 'Breaking News Brief',
+                        headline: 'BREAKING: Denver Transit Vote Delayed After Marathon Session',
+                        description: 'Council postpones crucial vote on $4B expansion after failing to reach consensus in overnight session.'
+                    }
+                ],
+                social: [
+                    {
+                        type: 'Twitter Thread',
+                        headline: '🚊 Denver transit drama: What just happened in council',
+                        description: '7-tweet thread explaining the deadlock, key players, and what comes next for the transit plan.'
+                    },
+                    {
+                        type: 'Instagram Story',
+                        headline: '🚇 Denver\'s transit battle: Timeline of chaos',
+                        description: 'Hour-by-hour breakdown of the marathon council session with key moments and quotes.'
+                    },
+                    {
+                        type: 'TikTok Clip',
+                        headline: '⚡ "This is fiscal madness!" - Council erupts over transit',
+                        description: '45-second compilation of the most heated exchanges from the 5-hour debate.'
+                    }
+                ],
+                headlines: [
+                    {
+                        type: 'Lead Story',
+                        headline: 'Denver Council Deadlocks on $4 Billion Transit Expansion',
+                        description: 'Focus on the deadlock and immediate political implications'
+                    },
+                    {
+                        type: 'Alternative Angle',
+                        headline: 'Transit Debate Exposes Deep Divisions in Denver Leadership',
+                        description: 'Political division and governance challenges angle'
+                    },
+                    {
+                        type: 'Impact Focus',
+                        headline: 'Denver Transit Stalemate Threatens Regional Transportation Goals',
+                        description: 'Broader implications for regional planning and federal funding'
+                    }
+                ],
+                quotes: [
+                    {
+                        text: 'Four billion dollars for a train that serves the wealthy while our buses can\'t even run on time? This is fiscal madness!',
+                        speaker: 'Councilman Kevin Flynn',
+                        timestamp: '4:45:12',
+                        quality: '96%'
+                    },
+                    {
+                        text: 'Every day we delay costs us more money and more carbon emissions. Denver needs to think beyond the next election cycle.',
+                        speaker: 'Councilwoman Robin Kniech',
+                        timestamp: '3:22:38',
+                        quality: '98%'
+                    },
+                    {
+                        text: 'I will not vote for any transit plan that doesn\'t prioritize equity and accessibility for all Denver residents.',
+                        speaker: 'Councilman Candi CdeBaca',
+                        timestamp: '2:56:44',
+                        quality: '94%'
+                    }
+                ]
+            }
+        };
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApplication();
+
+            // Check for URL parameters to switch meeting
+            const urlParams = new URLSearchParams(window.location.search);
+            const meetingParam = urlParams.get('meeting');
+            if (meetingParam && meetingData[meetingParam]) {
+                document.getElementById('meetingSelect').value = meetingParam;
+                switchMeeting();
+            }
+        });
+
+        function initializeApplication() {
+            loadInitialAlerts();
+            animateEngagementBars();
+            startTimelineAnimation();
+            animateMetrics();
+            startPeriodicUpdates();
+            updateEngagementContent('feedback'); // Initialize with feedback tab
+        }
+
+        // Enhanced Citizen Engagement Functions
+        function switchEngagementTab(tabName) {
+            const engagementPanel = event.target.closest('.feature-panel');
+            const engagementTabs = engagementPanel.querySelectorAll('.tab-content');
+            const engagementBtns = engagementPanel.querySelectorAll('.tab-btn');
+
+            engagementTabs.forEach(content => content.classList.remove('active'));
+            engagementBtns.forEach(btn => btn.classList.remove('active'));
+
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+
+            updateEngagementContent(tabName);
+        }
+
+        function updateEngagementContent(tabName) {
+            if (tabName === 'feedback') updateFeedbackContent();
+            else if (tabName === 'polls') updatePollsContent();
+            else if (tabName === 'questions') updateQuestionsContent();
+        }
+
+        function updateFeedbackContent() {
+            const feedbackContainer = document.getElementById('feedback');
+            const feedbackData = {
+                'austin-housing': [
+                    { location: 'District 3', time: '2 min ago', sentiment: 'positive', text: '"We need affordable housing NOW. Thank you Council for prioritizing this issue."' },
+                    { location: 'District 7', time: '4 min ago', sentiment: 'negative', text: '"This will destroy our neighborhood character. Where\'s the parking study?"' }
+                ],
+                'seattle-budget': [
+                    { location: 'Capitol Hill', time: '1 min ago', sentiment: 'positive', text: '"Finally a budget that balances public safety with social services. Well done!"' },
+                    { location: 'Georgetown', time: '3 min ago', sentiment: 'negative', text: '"$7.6 billion and we still can\'t fix the potholes? Fiscal mismanagement!"' }
+                ],
+                'miami-climate': [
+                    { location: 'Miami Beach', time: '30 sec ago', sentiment: 'positive', text: '"Thank you for taking climate change seriously. Our future depends on this plan."' },
+                    { location: 'Coral Gables', time: '2 min ago', sentiment: 'positive', text: '"$2 billion well spent. Better to invest now than lose everything later."' }
+                ],
+                'denver-transit': [
+                    { location: 'Five Points', time: '45 sec ago', sentiment: 'negative', text: '"Deadlock again! Why can\'t our leaders make tough decisions for once?"' },
+                    { location: 'LoDo', time: '2 min ago', sentiment: 'positive', text: '"Good. $4B is too much. Let\'s fix existing transit before building new."' }
+                ]
+            };
+
+            const currentFeedback = feedbackData[currentMeeting] || feedbackData['austin-housing'];
+            feedbackContainer.innerHTML = currentFeedback.map(item => `
+                <div class="engagement-item">
+                    <div class="engagement-meta">
+                        <span class="user-location">${item.location} • ${item.time}</span>
+                        <span class="sentiment-badge ${item.sentiment}">${item.sentiment === 'positive' ? '👍 Supportive' : '👎 Critical'}</span>
+                    </div>
+                    <div class="engagement-text">${item.text}</div>
+                    <div class="engagement-actions">
+                        <button onclick="moderateContent(this, 'approve')" class="mod-btn approve"><i class="fas fa-check"></i></button>
+                        <button onclick="moderateContent(this, 'highlight')" class="mod-btn highlight"><i class="fas fa-star"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updatePollsContent() {
+            const pollsContainer = document.getElementById('polls');
+            const pollsData = {
+                'austin-housing': { question: '"Should the city prioritize affordable housing over parking requirements?"', options: [{ text: 'Yes, housing is priority', percentage: 67 }, { text: 'No, parking is essential', percentage: 28 }, { text: 'Need both solutions', percentage: 5 }], votes: 847 },
+                'seattle-budget': { question: '"Is the $7.6B budget allocation appropriate for Seattle?"', options: [{ text: 'Yes, balanced approach', percentage: 52 }, { text: 'Too much spending', percentage: 31 }, { text: 'Not enough investment', percentage: 17 }], votes: 623 },
+                'miami-climate': { question: '"Should Miami-Dade lead on climate adaptation planning?"', options: [{ text: 'Yes, immediate action needed', percentage: 78 }, { text: 'Wait for federal guidance', percentage: 15 }, { text: 'Too expensive right now', percentage: 7 }], votes: 445 },
+                'denver-transit': { question: '"What should Denver do about the transit expansion deadlock?"', options: [{ text: 'Approve the full plan', percentage: 35 }, { text: 'Scale back the project', percentage: 42 }, { text: 'Start over completely', percentage: 23 }], votes: 956 }
+            };
+
+            const currentPoll = pollsData[currentMeeting] || pollsData['austin-housing'];
+            pollsContainer.innerHTML = `
+                <div class="live-poll">
+                    <div class="poll-question">${currentPoll.question}</div>
+                    <div class="poll-results">
+                        ${currentPoll.options.map(option => `<div class="poll-option"><span>${option.text}</span><div class="poll-bar" style="width: ${option.percentage}%">${option.percentage}%</div></div>`).join('')}
+                    </div>
+                    <div class="poll-meta">🗳️ ${currentPoll.votes} votes • Live results</div>
+                </div>
+            `;
+        }
+
+        function updateQuestionsContent() {
+            const questionsContainer = document.getElementById('questions');
+            const questionsData = {
+                'austin-housing': [{ text: '"What\'s the timeline for affordable housing development?"', district: 'District 5', votes: 23, priority: 'high' }, { text: '"How will this impact existing residents?"', district: 'District 3', votes: 8, priority: 'medium' }],
+                'seattle-budget': [{ text: '"Where exactly is the police funding increase going?"', district: 'Capitol Hill', votes: 34, priority: 'high' }, { text: '"When will we see improvements to homeless services?"', district: 'SODO', votes: 19, priority: 'medium' }],
+                'miami-climate': [{ text: '"Which neighborhoods will be protected first?"', district: 'Miami Beach', votes: 28, priority: 'high' }, { text: '"How will this affect property taxes?"', district: 'Kendall', votes: 15, priority: 'medium' }],
+                'denver-transit': [{ text: '"Why can\'t the council reach a compromise?"', district: 'Five Points', votes: 67, priority: 'high' }, { text: '"What are the alternatives to light rail?"', district: 'Capitol Hill', votes: 29, priority: 'medium' }]
+            };
+
+            const currentQuestions = questionsData[currentMeeting] || questionsData['austin-housing'];
+            questionsContainer.innerHTML = `<div class="question-queue">${currentQuestions.map(question => `
+                <div class="queued-question priority-${question.priority}">
+                    <div class="question-text">${question.text}</div>
+                    <div class="question-meta">📍 ${question.district} • ${question.priority === 'high' ? '🔥 Top voted' : '👍 Moderate'} (${question.votes} votes)</div>
+                </div>
+            `).join('')}</div>`;
+        }
+
+        // Video Player Functions
+        function togglePlayPause() {
+            const playButton = document.getElementById('playButton');
+            const icon = playButton.querySelector('i');
+
+            isPlaying = !isPlaying;
+
+            if (isPlaying) {
+                icon.className = 'fas fa-pause';
+                showNotification('Video playback started');
+                startPlaybackTimer();
+            } else {
+                icon.className = 'fas fa-play';
+                showNotification('Video playback paused');
+                clearInterval(playbackTimer);
+            }
+        }
+
+        let playbackTimer;
+        function startPlaybackTimer() {
+            playbackTimer = setInterval(() => {
+                if (isPlaying && currentTime < totalTime) {
+                    currentTime += 0.5; // Increment by 30 seconds
+                    updateTimeDisplay();
+                    updateTimelineProgress();
+                }
+            }, 500);
+        }
+
+        function updateTimeDisplay() {
+            const timeDisplay = document.getElementById('timeDisplay');
+            const currentMinutes = Math.floor(currentTime);
+            const currentSeconds = Math.floor((currentTime % 1) * 60);
+            const totalMinutes = Math.floor(totalTime);
+            const totalSeconds = Math.floor((totalTime % 1) * 60);
+
+            const formatTime = (mins, secs) => `${Math.floor(mins/60)}:${(mins%60).toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+
+            timeDisplay.textContent = `${formatTime(currentMinutes, currentSeconds)} / ${formatTime(totalMinutes, totalSeconds)}`;
+        }
+
+        function updateTimelineProgress() {
+            const progress = document.getElementById('timelineProgress');
+            const percentage = (currentTime / totalTime) * 100;
+            progress.style.width = percentage + '%';
+        }
+
+        function seekTo(event) {
+            event.stopPropagation();
+            const timeline = event.currentTarget;
+            const rect = timeline.getBoundingClientRect();
+            const percentage = (event.clientX - rect.left) / rect.width;
+            currentTime = percentage * totalTime;
+            updateTimeDisplay();
+            updateTimelineProgress();
+            showNotification(`Jumped to ${Math.floor(currentTime/60)}:${Math.floor(currentTime%60).toString().padStart(2,'0')}`);
+        }
+
+        function jumpToMoment(percentage) {
+            currentTime = (percentage / 100) * totalTime;
+            updateTimeDisplay();
+            updateTimelineProgress();
+            const minutes = Math.floor(currentTime / 60);
+            const seconds = Math.floor(currentTime % 60);
+            showNotification(`Jumped to key moment at ${Math.floor(minutes/60)}:${(minutes%60).toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`);
+        }
+
+        function jumpToTranscriptTime(timeString) {
+            const [hours, minutes, seconds] = timeString.split(':').map(Number);
+            currentTime = (hours * 60) + minutes + (seconds / 60);
+            updateTimeDisplay();
+            updateTimelineProgress();
+            showNotification(`Jumped to transcript moment: ${timeString}`);
+        }
+
+        // Engagement Bars Animation
+        function animateEngagementBars() {
+            const container = document.getElementById('engagementBars');
+            container.innerHTML = '';
+
+            const heights = [30, 45, 60, 85, 90, 75, 95, 88, 70, 50, 35, 25];
+            const colors = ['#10b981', '#10b981', '#f59e0b', '#ef4444', '#ef4444', '#f59e0b', '#dc2626', '#ef4444', '#f59e0b', '#10b981', '#10b981', '#10b981'];
+
+            heights.forEach((height, index) => {
+                const bar = document.createElement('div');
+                bar.className = 'engagement-bar';
+                bar.style.height = '0%';
+                bar.style.background = colors[index];
+                bar.onclick = () => showEngagementDetail(index, height);
+                container.appendChild(bar);
+
+                setTimeout(() => {
+                    bar.style.height = height + '%';
+                }, index * 100);
+            });
+        }
+
+        function showEngagementDetail(index, height) {
+            const timeSlots = ['0-20min', '20-40min', '40-60min', '60-80min', '80-100min', '100-120min', '120-140min', '140-160min', '160-180min', '180-200min', '200-220min', '220-240min'];
+            const descriptions = ['Calm opening', 'Standard discussion', 'Rising tensions', 'Heated exchange', 'Peak controversy', 'Continued tension', 'Breaking point', 'High emotion', 'Moderate tension', 'Cooling down', 'Return to order', 'Closing remarks'];
+
+            showModal('Engagement Detail', `
+                <h3>Time Period: ${timeSlots[index]}</h3>
+                <p><strong>Engagement Level:</strong> ${height}%</p>
+                <p><strong>Description:</strong> ${descriptions[index]}</p>
+                <p><strong>Key Events:</strong> Click timeline markers above for specific moments</p>
+            `);
+        }
+
+        // Timeline Animation
+        function startTimelineAnimation() {
+            const progress = document.querySelector('.timeline-progress');
+            let width = 34;
+            setInterval(() => {
+                if (isPlaying) {
+                    width += 0.2;
+                    if (width > 95) width = 34;
+                    progress.style.width = width + '%';
+                }
+            }, 2000);
+        }
+
+        // Alerts System
+        function loadInitialAlerts() {
+            const alerts = [
+                {
+                    priority: 'URGENT',
+                    title: 'Protest Eruption During Public Comment',
+                    content: 'Multiple citizens disrupted council session over proposed homeless shelter location',
+                    timestamp: '3:47:23 - Just now'
+                },
+                {
+                    priority: 'HIGH',
+                    title: 'Council Member Makes Controversial Statement',
+                    content: '"Low-income housing will destroy property values in this district"',
+                    timestamp: '3:23:15 - 24 minutes ago'
+                },
+                {
+                    priority: 'MEDIUM',
+                    title: 'Developer Threatens Legal Action',
+                    content: 'Housing developer warns of lawsuit over zoning restrictions',
+                    timestamp: '2:56:42 - 51 minutes ago'
+                }
+            ];
+
+            const container = document.getElementById('alertsContainer');
+            alerts.forEach(alert => {
+                addAlert(alert);
+            });
+        }
+
+        function addAlert(alert) {
+            const container = document.getElementById('alertsContainer');
+            const alertHTML = `
+                <div class="alert-item" onclick="expandAlert(this)">
+                    <div class="alert-priority">${alert.priority}</div>
+                    <div class="alert-content">
+                        <strong>${alert.title}</strong><br>
+                        ${alert.content}
+                    </div>
+                    <div class="alert-timestamp">${alert.timestamp}</div>
+                </div>
+            `;
+            container.insertAdjacentHTML('afterbegin', alertHTML);
+
+            // Remove old alerts if more than 6
+            const alertItems = container.querySelectorAll('.alert-item');
+            if (alertItems.length > 6) {
+                alertItems[alertItems.length - 1].remove();
+            }
+        }
+
+        function expandAlert(alertElement) {
+            const title = alertElement.querySelector('.alert-content strong').textContent;
+            const content = alertElement.querySelector('.alert-content').textContent.replace(title, '').trim();
+            const timestamp = alertElement.querySelector('.alert-timestamp').textContent;
+
+            showModal('Alert Details', `
+                <h3>${title}</h3>
+                <p><strong>Content:</strong> ${content}</p>
+                <p><strong>Time:</strong> ${timestamp}</p>
+                <div style="margin-top: 20px;">
+                    <button class="export-btn" onclick="createAlertStory()" style="margin-right: 10px;">
+                        <i class="fas fa-newspaper"></i> Create Story
+                    </button>
+                    <button class="export-btn" onclick="sendBreakingNews()">
+                        <i class="fas fa-broadcast-tower"></i> Send Breaking News
+                    </button>
+                </div>
+            `);
+        }
+
+        // Meeting Switching Function
+        function switchMeeting() {
+            const select = document.getElementById('meetingSelect');
+            currentMeeting = select.value;
+            const meeting = meetingData[currentMeeting];
+
+            // Update header information
+            document.getElementById('videoTitle').textContent = meeting.title;
+            document.getElementById('meetingDate').textContent = meeting.date;
+            document.getElementById('totalDuration').textContent = meeting.duration;
+            document.getElementById('participantCount').textContent = meeting.participants;
+            document.getElementById('controversyLevel').textContent = meeting.controversyLevel;
+
+            // Update story templates
+            updateStoryTemplates();
+
+            // Update quotes
+            updateQuotes();
+
+            showNotification(`Switched to: ${meeting.title.split(':')[0]}`);
+        }
+
+        function updateStoryTemplates() {
+            const meeting = meetingData[currentMeeting];
+
+            // Update packages
+            const packagesContainer = document.getElementById('packagesContainer');
+            packagesContainer.innerHTML = meeting.packages.map(item => `
+                <div class="story-template" onclick="selectStory(this, '${item.type}')">
+                    <div class="story-type">${item.type}</div>
+                    <div class="story-headline">${item.headline}</div>
+                    <div class="story-description">${item.description}</div>
+                </div>
+            `).join('');
+
+            // Update social
+            const socialContainer = document.getElementById('socialContainer');
+            socialContainer.innerHTML = meeting.social.map(item => `
+                <div class="story-template" onclick="selectStory(this, '${item.type}')">
+                    <div class="story-type">${item.type}</div>
+                    <div class="story-headline">${item.headline}</div>
+                    <div class="story-description">${item.description}</div>
+                </div>
+            `).join('');
+
+            // Update headlines
+            const headlinesContainer = document.getElementById('headlinesContainer');
+            headlinesContainer.innerHTML = meeting.headlines.map(item => `
+                <div class="story-template" onclick="selectStory(this, '${item.type}')">
+                    <div class="story-type">${item.type}</div>
+                    <div class="story-headline">${item.headline}</div>
+                    <div class="story-description">${item.description}</div>
+                </div>
+            `).join('');
+        }
+
+        function updateQuotes() {
+            const meeting = meetingData[currentMeeting];
+            const quotesContainer = document.getElementById('quotesContainer');
+
+            // Get the export buttons HTML to preserve them
+            const exportButtons = quotesContainer.querySelector('.export-buttons').outerHTML;
+
+            // Update quotes
+            quotesContainer.innerHTML = meeting.quotes.map(quote => `
+                <div class="quote-card" onclick="copyQuote(this)">
+                    <div class="quote-text">${quote.text}</div>
+                    <div class="quote-meta">
+                        <span>${quote.speaker} | ${quote.timestamp}</span>
+                        <span class="quality-score">${quote.quality}</span>
+                    </div>
+                </div>
+            `).join('') + exportButtons;
+        }
+
+        // Story Generator Functions
+        function switchStoryTab(tabName) {
+            // Get the parent container to find the correct tabs
+            const tabContainer = event.target.closest('.panel-content');
+            const tabBtns = tabContainer.querySelectorAll('.tab-btn');
+            const tabContents = tabContainer.querySelectorAll('.tab-content');
+
+            tabBtns.forEach(btn => btn.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        function selectStory(element, type) {
+            // Remove previous selection
+            document.querySelectorAll('.story-template').forEach(template => {
+                template.classList.remove('selected');
+            });
+
+            // Add selection to clicked element
+            element.classList.add('selected');
+            selectedStory = {
+                type: type,
+                headline: element.querySelector('.story-headline').textContent,
+                description: element.querySelector('.story-description').textContent
+            };
+
+            showNotification(`Selected: ${type}`);
+        }
+
+        function exportToENPS() {
+            if (!selectedStory) {
+                showNotification('Please select a story template first', 'error');
+                return;
+            }
+
+            const button = event.target;
+            button.classList.add('processing');
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Exporting...';
+
+            setTimeout(() => {
+                button.classList.remove('processing');
+                button.classList.add('success');
+                button.innerHTML = '<i class="fas fa-check"></i> Exported';
+                showNotification(`Story exported to ENPS: ${selectedStory.type}`);
+
+                setTimeout(() => {
+                    button.classList.remove('success');
+                    button.innerHTML = '<i class="fas fa-tv"></i> Export to ENPS';
+                }, 2000);
+            }, 2000);
+        }
+
+        function pushToSocial() {
+            if (!selectedStory) {
+                showNotification('Please select a story template first', 'error');
+                return;
+            }
+
+            const button = event.target;
+            button.classList.add('processing');
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publishing...';
+
+            setTimeout(() => {
+                button.classList.remove('processing');
+                button.classList.add('success');
+                button.innerHTML = '<i class="fas fa-check"></i> Published';
+                showNotification(`Story pushed to social media: ${selectedStory.type}`);
+
+                setTimeout(() => {
+                    button.classList.remove('success');
+                    button.innerHTML = '<i class="fas fa-share"></i> Push to Social';
+                }, 2000);
+            }, 2000);
+        }
+
+        // Quote Functions
+        function copyQuote(quoteElement) {
+            const quoteText = quoteElement.querySelector('.quote-text').textContent;
+            const quoteMeta = quoteElement.querySelector('.quote-meta span').textContent;
+            const fullQuote = `"${quoteText}" - ${quoteMeta}`;
+
+            navigator.clipboard.writeText(fullQuote).then(() => {
+                quoteElement.classList.add('copied');
+                showNotification('Quote copied to clipboard');
+
+                setTimeout(() => {
+                    quoteElement.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        function createVideoClips() {
+            const button = event.target;
+            button.classList.add('processing');
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating...';
+
+            setTimeout(() => {
+                button.classList.remove('processing');
+                button.classList.add('success');
+                button.innerHTML = '<i class="fas fa-check"></i> Created';
+                showNotification('Video clips created successfully');
+
+                showModal('Video Clips Created', `
+                    <h3>3 Video Clips Generated</h3>
+                    <ul style="margin: 15px 0; padding-left: 20px;">
+                        <li>Councilman Chen controversial statement (0:15)</li>
+                        <li>Maria Rodriguez passionate response (0:12)</li>
+                        <li>Developer legal threat (0:18)</li>
+                    </ul>
+                    <p>Clips are ready for broadcast and social media distribution.</p>
+                `);
+
+                setTimeout(() => {
+                    button.classList.remove('success');
+                    button.innerHTML = '<i class="fas fa-video"></i> Create Clips';
+                }, 3000);
+            }, 3000);
+        }
+
+        function addToScript() {
+            const button = event.target;
+            button.classList.add('processing');
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
+
+            setTimeout(() => {
+                button.classList.remove('processing');
+                button.classList.add('success');
+                button.innerHTML = '<i class="fas fa-check"></i> Added';
+                showNotification('Quotes added to script template');
+
+                setTimeout(() => {
+                    button.classList.remove('success');
+                    button.innerHTML = '<i class="fas fa-edit"></i> Add to Script';
+                }, 2000);
+            }, 1500);
+        }
+
+        // Analytics Functions
+        function showAnalyticsDetail(metric) {
+            const details = {
+                'viral': {
+                    title: 'Viral Potential Analysis',
+                    content: `
+                        <h3>94% Viral Potential - Extremely High</h3>
+                        <p><strong>Contributing Factors:</strong></p>
+                        <ul style="margin: 15px 0; padding-left: 20px;">
+                            <li>High controversy level (8.2/10)</li>
+                            <li>Emotional public reactions</li>
+                            <li>Clear opposing viewpoints</li>
+                            <li>Local community impact</li>
+                            <li>Housing crisis relevance</li>
+                        </ul>
+                        <p><strong>Recommendation:</strong> Lead story placement, immediate social push</p>
+                    `
+                },
+                'shares': {
+                    title: 'Estimated Shares Breakdown',
+                    content: `
+                        <h3>12.7K Expected Shares</h3>
+                        <p><strong>Platform Distribution:</strong></p>
+                        <ul style="margin: 15px 0; padding-left: 20px;">
+                            <li>Facebook: 5.2K shares</li>
+                            <li>Twitter: 4.1K retweets</li>
+                            <li>Instagram: 2.8K story shares</li>
+                            <li>TikTok: 600 shares</li>
+                        </ul>
+                        <p><strong>Peak sharing window:</strong> Next 4-6 hours</p>
+                    `
+                },
+                'controversy': {
+                    title: 'Controversy Score Analysis',
+                    content: `
+                        <h3>8.2/10 Controversy Score - High Alert</h3>
+                        <p><strong>Key Controversial Elements:</strong></p>
+                        <ul style="margin: 15px 0; padding-left: 20px;">
+                            <li>Property values vs. human rights debate</li>
+                            <li>Public disruption and protests</li>
+                            <li>Legal threats from developers</li>
+                            <li>Political tensions exposed</li>
+                        </ul>
+                        <p><strong>Risk Level:</strong> Moderate - Balance coverage carefully</p>
+                    `
+                },
+                'mentions': {
+                    title: 'Media Mentions Tracking',
+                    content: `
+                        <h3>156 Media Mentions (Last 2 Hours)</h3>
+                        <p><strong>Source Breakdown:</strong></p>
+                        <ul style="margin: 15px 0; padding-left: 20px;">
+                            <li>Local TV: 45 mentions</li>
+                            <li>Local newspapers: 38 mentions</li>
+                            <li>Radio stations: 32 mentions</li>
+                            <li>Blogs/online: 41 mentions</li>
+                        </ul>
+                        <p><strong>Trending:</strong> #AustinHousing, #CouncilChaos</p>
+                    `
+                }
+            };
+
+            const detail = details[metric];
+            showModal(detail.title, detail.content);
+        }
+
+        // Integration Functions
+        function viewIntegrationDetails(system) {
+            const details = {
+                'enps': {
+                    title: 'ENPS Integration Status',
+                    content: `
+                        <h3>Electronic News Production System</h3>
+                        <p><strong>Status:</strong> ✅ Connected and Active</p>
+                        <p><strong>Last Sync:</strong> 2 minutes ago</p>
+                        <p><strong>Templates Ready:</strong></p>
+                        <ul style="margin: 15px 0; padding-left: 20px;">
+                            <li>Breaking news template</li>
+                            <li>60-second package format</li>
+                            <li>90-second deep dive</li>
+                            <li>Social media formats</li>
+                        </ul>
+                    `
+                },
+                'inews': {
+                    title: 'iNews Integration Status',
+                    content: `
+                        <h3>iNews Newsroom System</h3>
+                        <p><strong>Status:</strong> ✅ Synchronized</p>
+                        <p><strong>Rundown Position:</strong> Lead story, 6pm broadcast</p>
+                        <p><strong>Auto-updates:</strong></p>
+                        <ul style="margin: 15px 0; padding-left: 20px;">
+                            <li>Headlines updated automatically</li>
+                            <li>Breaking news alerts sent</li>
+                            <li>Story assignments distributed</li>
+                        </ul>
+                    `
+                },
+                'social': {
+                    title: 'Social Media Integration',
+                    content: `
+                        <h3>Social Media Management</h3>
+                        <p><strong>Status:</strong> ✅ Queue Active</p>
+                        <p><strong>Scheduled Posts:</strong> 3 pending</p>
+                        <p><strong>Platforms Connected:</strong></p>
+                        <ul style="margin: 15px 0; padding-left: 20px;">
+                            <li>Facebook - Auto-posting enabled</li>
+                            <li>Twitter - Real-time updates</li>
+                            <li>Instagram - Story scheduled</li>
+                            <li>TikTok - Clip generation ready</li>
+                        </ul>
+                    `
+                },
+                'video': {
+                    title: 'Video Edit Suite Integration',
+                    content: `
+                        <h3>Automated Video Processing</h3>
+                        <p><strong>Status:</strong> 🔄 Processing highlights</p>
+                        <p><strong>Current Jobs:</strong></p>
+                        <ul style="margin: 15px 0; padding-left: 20px;">
+                            <li>Controversial moments compilation (78% complete)</li>
+                            <li>Quote extraction clips (45% complete)</li>
+                            <li>Social media teasers (waiting)</li>
+                        </ul>
+                        <p><strong>ETA:</strong> 3 minutes remaining</p>
+                    `
+                }
+            };
+
+            const detail = details[system];
+            showModal(detail.title, detail.content);
+        }
+
+        function sendToNewsroom() {
+            const button = event.target;
+            button.classList.add('processing');
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+
+            setTimeout(() => {
+                button.classList.remove('processing');
+                button.classList.add('success');
+                button.innerHTML = '<i class="fas fa-check"></i> Sent';
+                showNotification('Package sent to newsroom successfully');
+
+                showModal('Newsroom Delivery Confirmation', `
+                    <h3>Story Package Delivered</h3>
+                    <p><strong>Recipient:</strong> Austin News Desk</p>
+                    <p><strong>Package Contents:</strong></p>
+                    <ul style="margin: 15px 0; padding-left: 20px;">
+                        <li>Complete story templates</li>
+                        <li>Key quotes and soundbites</li>
+                        <li>Video highlight markers</li>
+                        <li>Analytics and recommendations</li>
+                    </ul>
+                    <p><strong>Status:</strong> Ready for production</p>
+                `);
+
+                setTimeout(() => {
+                    button.classList.remove('success');
+                    button.innerHTML = '<i class="fas fa-paper-plane"></i> Send to Newsroom';
+                }, 3000);
+            }, 2000);
+        }
+
+        function scheduleBroadcast() {
+            const button = event.target;
+            button.classList.add('processing');
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Scheduling...';
+
+            setTimeout(() => {
+                button.classList.remove('processing');
+                button.classList.add('success');
+                button.innerHTML = '<i class="fas fa-check"></i> Scheduled';
+                showNotification('Broadcast scheduled successfully');
+
+                showModal('Broadcast Schedule Confirmation', `
+                    <h3>Broadcast Scheduled</h3>
+                    <p><strong>Time Slots:</strong></p>
+                    <ul style="margin: 15px 0; padding-left: 20px;">
+                        <li>6:00 PM - Lead story (90 seconds)</li>
+                        <li>7:00 PM - Update package (60 seconds)</li>
+                        <li>11:00 PM - Full recap (2 minutes)</li>
+                    </ul>
+                    <p><strong>Social Media:</strong> Posts scheduled for 5:45 PM</p>
+                    <p><strong>Breaking News:</strong> Alert sent immediately</p>
+                `);
+
+                setTimeout(() => {
+                    button.classList.remove('success');
+                    button.innerHTML = '<i class="fas fa-calendar"></i> Schedule Broadcast';
+                }, 3000);
+            }, 2500);
+        }
+
+        // Additional Alert Functions
+        function createAlertStory() {
+            closeModal();
+            showNotification('Creating story from alert...');
+
+            setTimeout(() => {
+                showModal('Story Created from Alert', `
+                    <h3>Breaking News Story Generated</h3>
+                    <p><strong>Headline:</strong> "Austin Council Meeting Erupts as Housing Debate Sparks Protests"</p>
+                    <p><strong>Lead:</strong> Multiple protesters disrupted tonight's Austin City Council meeting...</p>
+                    <p><strong>Content includes:</strong></p>
+                    <ul style="margin: 15px 0; padding-left: 20px;">
+                        <li>Real-time protest coverage</li>
+                        <li>Council member reactions</li>
+                        <li>Community response quotes</li>
+                        <li>Background on housing crisis</li>
+                    </ul>
+                    <p><strong>Ready for:</strong> Immediate broadcast and social distribution</p>
+                `);
+            }, 2000);
+        }
+
+        function sendBreakingNews() {
+            closeModal();
+            showNotification('Sending breaking news alert...');
+
+            setTimeout(() => {
+                showNotification('Breaking news alert sent to all platforms');
+                showModal('Breaking News Alert Sent', `
+                    <h3>Alert Distribution Complete</h3>
+                    <p><strong>Alert:</strong> "BREAKING: Austin Council Meeting Disrupted by Housing Protesters"</p>
+                    <p><strong>Sent to:</strong></p>
+                    <ul style="margin: 15px 0; padding-left: 20px;">
+                        <li>Mobile app subscribers (12,847 users)</li>
+                        <li>Website banner notification</li>
+                        <li>Social media emergency posts</li>
+                        <li>Email newsletter (urgent)</li>
+                        <li>Partner news networks</li>
+                    </ul>
+                    <p><strong>Delivery time:</strong> Under 30 seconds</p>
+                `);
+            }, 1500);
+        }
+
+        // Metrics Animation
+        function animateMetrics() {
+            const metrics = [
+                { id: 'viralPotential', final: '94%', isPercentage: true },
+                { id: 'estimatedShares', final: '12.7K', isLargeNumber: true },
+                { id: 'controversyScore', final: '8.2', isDecimal: true },
+                { id: 'mediaMentions', final: '156', isInteger: true }
+            ];
+
+            metrics.forEach(metric => {
+                const element = document.getElementById(metric.id);
+                let current = 0;
+                const target = parseFloat(metric.final);
+                const increment = target / 50;
+
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        element.textContent = metric.final;
+                        clearInterval(timer);
+                    } else {
+                        if (metric.isPercentage) {
+                            element.textContent = Math.round(current) + '%';
+                        } else if (metric.isDecimal) {
+                            element.textContent = current.toFixed(1);
+                        } else if (metric.isLargeNumber) {
+                            element.textContent = (current / 1000).toFixed(1) + 'K';
+                        } else {
+                            element.textContent = Math.round(current);
+                        }
+                    }
+                }, 50);
+            });
+        }
+
+        // Periodic Updates
+        function startPeriodicUpdates() {
+            // Add new alerts every 20-40 seconds
+            setInterval(() => {
+                if (Math.random() > 0.6) {
+                    addRandomAlert();
+                }
+            }, Math.random() * 20000 + 20000);
+
+            // Update metrics occasionally
+            setInterval(updateMetrics, 45000);
+        }
+
+        function addRandomAlert() {
+            const newAlerts = [
+                {
+                    priority: 'MEDIUM',
+                    title: 'Security Called to Council Chamber',
+                    content: 'Additional security personnel requested due to rising tensions',
+                    timestamp: 'Just now'
+                },
+                {
+                    priority: 'HIGH',
+                    title: 'Council Member Walks Out',
+                    content: 'Councilwoman Martinez temporarily leaves session citing "toxic environment"',
+                    timestamp: '1 minute ago'
+                },
+                {
+                    priority: 'URGENT',
+                    title: 'Mayor Calls for Recess',
+                    content: 'Emergency 15-minute recess called to restore order in the chamber',
+                    timestamp: 'Just now'
+                }
+            ];
+
+            const randomAlert = newAlerts[Math.floor(Math.random() * newAlerts.length)];
+            addAlert(randomAlert);
+        }
+
+        function updateMetrics() {
+            const metrics = ['viralPotential', 'estimatedShares', 'controversyScore', 'mediaMentions'];
+            const changes = [2, 500, 0.3, 25];
+
+            metrics.forEach((metric, index) => {
+                const element = document.getElementById(metric);
+                const currentText = element.textContent;
+                const currentValue = parseFloat(currentText);
+                const newValue = currentValue + (Math.random() - 0.5) * changes[index];
+
+                if (metric === 'viralPotential') {
+                    element.textContent = Math.min(99, Math.max(80, Math.round(newValue))) + '%';
+                } else if (metric === 'estimatedShares') {
+                    element.textContent = (Math.max(10, newValue / 1000)).toFixed(1) + 'K';
+                } else if (metric === 'controversyScore') {
+                    element.textContent = Math.min(10, Math.max(7, newValue)).toFixed(1);
+                } else {
+                    element.textContent = Math.max(100, Math.round(newValue));
+                }
+            });
+        }
+
+        // Modal Functions
+        function showModal(title, content) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalBody').innerHTML = content;
+            document.getElementById('modal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        // Notification Functions
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const text = document.getElementById('notificationText');
+
+            text.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.style.display = 'flex';
+
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('modal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        // Professional Features Functions
+        function showShareModal() {
+            document.getElementById('shareModal').style.display = 'block';
+            updateShareLink();
+        }
+
+        function closeShareModal() {
+            document.getElementById('shareModal').style.display = 'none';
+        }
+
+        function showSettings() {
+            document.getElementById('settingsModal').style.display = 'block';
+        }
+
+        function closeSettingsModal() {
+            document.getElementById('settingsModal').style.display = 'none';
+        }
+
+        function selectShareOption(element, type) {
+            document.querySelectorAll('.share-option').forEach(opt => opt.classList.remove('selected'));
+            element.classList.add('selected');
+            updateShareLink(type);
+        }
+
+        function updateShareLink(type = 'view-only') {
+            const baseUrl = 'https://civicscoop.pro/live/CIV-2025-1202-003';
+            const links = {
+                'view-only': baseUrl + '?access=view-only&key=vw_' + generateKey(),
+                'collaborate': baseUrl + '?access=collaborate&key=co_' + generateKey(),
+                'embed': '<iframe src="' + baseUrl + '?embed=true" width="100%" height="600"></iframe>',
+                'export': baseUrl + '/export?format=package&key=ex_' + generateKey()
+            };
+            document.getElementById('shareLink').value = links[type] || links['view-only'];
+        }
+
+        function generateKey() {
+            return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        }
+
+        function copyShareLink() {
+            const linkInput = document.getElementById('shareLink');
+            linkInput.select();
+            document.execCommand('copy');
+
+            const copyBtn = event.target.closest('.copy-btn');
+            const originalText = copyBtn.innerHTML;
+            copyBtn.classList.add('success');
+            copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+
+            setTimeout(() => {
+                copyBtn.classList.remove('success');
+                copyBtn.innerHTML = originalText;
+            }, 2000);
+
+            showNotification('Share link copied to clipboard!');
+        }
+
+        function showQRCode() {
+            const link = document.getElementById('shareLink').value;
+            showModal('QR Code for Session', `
+                <div style="text-align: center; padding: 20px;">
+                    <div style="width: 200px; height: 200px; background: white; margin: 0 auto 15px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #000; font-family: monospace; font-size: 12px; padding: 10px; box-sizing: border-box;">QR CODE<br><br>${link.substring(0, 30)}...</div>
+                    <p style="color: #94a3b8; font-size: 12px;">Scan to access live session</p>
+                    <p style="color: #e2e8f0; font-size: 12px; word-break: break-all; max-width: 400px; margin: 0 auto;">${link}</p>
+                </div>
+            `);
+        }
+
+        function toggleSetting(element) {
+            element.classList.toggle('active');
+            const isActive = element.classList.contains('active');
+            showNotification(isActive ? 'Setting enabled' : 'Setting disabled');
+        }
+
+        function showAIAssistant() {
+            showModal('AI Assistant', `
+                <div style="padding: 15px;">
+                    <div style="background: rgba(168, 85, 247, 0.1); border: 1px solid rgba(168, 85, 247, 0.3); border-radius: 8px; padding: 15px; margin-bottom: 15px;">
+                        <h4 style="color: #a855f7; margin: 0 0 10px;">🤖 CivicScoop AI</h4>
+                        <p style="color: #e2e8f0; margin: 0; font-size: 14px;">How can I help you with this ${meetingData[currentMeeting].title}?</p>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+                        <button class="export-btn" onclick="aiSuggestStory()">📝 Suggest Story Angles</button>
+                        <button class="export-btn" onclick="aiSummarize()">📋 Summarize Key Points</button>
+                        <button class="export-btn" onclick="aiFactCheck()">✅ Fact-Check Claims</button>
+                        <button class="export-btn" onclick="aiTrendAnalysis()">📈 Trend Analysis</button>
+                    </div>
+                    <textarea placeholder="Ask AI about the meeting..." style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #e2e8f0; padding: 10px; min-height: 60px; resize: vertical;"></textarea>
+                    <button class="export-btn" style="margin-top: 10px; width: 100%;">💬 Ask AI</button>
+                </div>
+            `);
+        }
+
+        function quickExport() {
+            const meeting = meetingData[currentMeeting];
+            showNotification('Generating export package...');
+
+            setTimeout(() => {
+                showModal('Quick Export Complete', `
+                    <h3>📦 Export Package Ready</h3>
+                    <p><strong>Meeting:</strong> ${meeting.title}</p>
+                    <p><strong>Package includes:</strong></p>
+                    <ul style="margin: 15px 0; padding-left: 20px; color: #e2e8f0;">
+                        <li>Full video with AI highlights</li>
+                        <li>Complete transcript with timestamps</li>
+                        <li>3 story templates (60s, 90s, breaking)</li>
+                        <li>Key quotes and soundbites</li>
+                        <li>Citizen engagement data</li>
+                        <li>Analytics and metrics</li>
+                    </ul>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px;">
+                        <button class="export-btn">📱 Download Mobile</button>
+                        <button class="export-btn">💻 Download Desktop</button>
+                        <button class="export-btn">☁️ Save to Cloud</button>
+                        <button class="export-btn">📧 Email Package</button>
+                    </div>
+                `);
+            }, 2000);
+        }
+
+        function sendBreakingAlert() {
+            showModal('Send Breaking News Alert', `
+                <div style="padding: 10px;">
+                    <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 8px; padding: 15px; margin-bottom: 15px;">
+                        <h4 style="color: #ef4444; margin: 0 0 10px;">🚨 Breaking News Alert</h4>
+                        <p style="color: #e2e8f0; margin: 0; font-size: 14px;">Send immediate alert to newsroom and subscribers</p>
+                    </div>
+                    <textarea placeholder="Alert headline..." style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #e2e8f0; padding: 10px; margin-bottom: 10px; font-weight: bold;">BREAKING: ${meetingData[currentMeeting].title.split(':')[1]} - Live Updates</textarea>
+                    <textarea placeholder="Alert details..." style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #e2e8f0; padding: 10px; min-height: 80px; resize: vertical; margin-bottom: 15px;">Major developments in ongoing council session. Live coverage and analysis available.</textarea>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="export-btn" style="flex: 1; background: linear-gradient(135deg, #ef4444, #dc2626);">🚨 Send Alert</button>
+                        <button class="export-btn" style="flex: 1;">💾 Save Draft</button>
+                    </div>
+                </div>
+            `);
+        }
+
+        function aiSuggestStory() {
+            const meeting = meetingData[currentMeeting];
+            closeModal();
+            setTimeout(() => {
+                showModal('AI Story Suggestions', `
+                    <h3>🤖 AI-Generated Story Angles</h3>
+                    <div style="margin: 15px 0;">
+                        <div style="background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2); border-radius: 6px; padding: 12px; margin-bottom: 10px;">
+                            <strong style="color: #22c55e;">🎯 Recommended Lead:</strong><br>
+                            <span style="color: #e2e8f0; font-size: 14px;">${meeting.headlines[0].headline}</span>
+                        </div>
+                        <div style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 6px; padding: 12px; margin-bottom: 10px;">
+                            <strong style="color: #3b82f6;">📊 Data Angle:</strong><br>
+                            <span style="color: #e2e8f0; font-size: 14px;">Community impact analysis with polling data and demographics</span>
+                        </div>
+                        <div style="background: rgba(168, 85, 247, 0.1); border: 1px solid rgba(168, 85, 247, 0.2); border-radius: 6px; padding: 12px;">
+                            <strong style="color: #a855f7;">🔮 Future Impact:</strong><br>
+                            <span style="color: #e2e8f0; font-size: 14px;">Long-term implications for city policy and resident relations</span>
+                        </div>
+                    </div>
+                    <button class="export-btn" style="width: 100%;">✨ Generate Full Story Package</button>
+                `);
+            }, 1000);
+        }
+
+        function aiSummarize() {
+            closeModal();
+            showNotification('AI analyzing meeting content...');
+            setTimeout(() => {
+                const meeting = meetingData[currentMeeting];
+                showModal('AI Meeting Summary', `
+                    <h3>📋 AI-Generated Summary</h3>
+                    <div style="background: rgba(255, 255, 255, 0.05); border-radius: 8px; padding: 15px; margin: 15px 0;">
+                        <h4 style="color: #60a5fa; margin: 0 0 10px;">Key Developments:</h4>
+                        <ul style="color: #e2e8f0; margin: 0; padding-left: 20px;">
+                            <li>Council debate intensity: ${meeting.controversyLevel}</li>
+                            <li>Primary stakeholder positions identified</li>
+                            <li>Public engagement: ${meeting.participants} active participants</li>
+                            <li>Media coverage potential: Very High</li>
+                        </ul>
+                        <h4 style="color: #60a5fa; margin: 15px 0 10px;">Recommended Actions:</h4>
+                        <ul style="color: #e2e8f0; margin: 0; padding-left: 20px;">
+                            <li>Immediate story publication recommended</li>
+                            <li>Follow-up interviews with key speakers</li>
+                            <li>Community response monitoring</li>
+                        </ul>
+                    </div>
+                `);
+            }, 2000);
+        }
+
+        function aiFactCheck() {
+            closeModal();
+            showNotification('AI fact-checking claims...');
+            setTimeout(() => {
+                showModal('AI Fact-Check Report', `
+                    <h3>✅ Fact-Check Analysis</h3>
+                    <div style="margin: 15px 0;">
+                        <div style="background: rgba(34, 197, 94, 0.1); border-left: 4px solid #22c55e; padding: 10px; margin-bottom: 10px;">
+                            <strong style="color: #22c55e;">✅ VERIFIED:</strong> Budget figures and timeline claims<br>
+                            <span style="color: #94a3b8; font-size: 12px;">Cross-referenced with official city documents</span>
+                        </div>
+                        <div style="background: rgba(245, 158, 11, 0.1); border-left: 4px solid #f59e0b; padding: 10px; margin-bottom: 10px;">
+                            <strong style="color: #f59e0b;">⚠️ NEEDS VERIFICATION:</strong> Property value impact claims<br>
+                            <span style="color: #94a3b8; font-size: 12px;">Requires independent real estate analysis</span>
+                        </div>
+                        <div style="background: rgba(34, 197, 94, 0.1); border-left: 4px solid #22c55e; padding: 10px;">
+                            <strong style="color: #22c55e;">✅ CONFIRMED:</strong> Legal procedure statements<br>
+                            <span style="color: #94a3b8; font-size: 12px;">Matches city charter requirements</span>
+                        </div>
+                    </div>
+                    <p style="color: #94a3b8; font-size: 12px; text-align: center;">AI confidence: 94% | Human review recommended</p>
+                `);
+            }, 2500);
+        }
+
+        function aiTrendAnalysis() {
+            closeModal();
+            showNotification('Analyzing social trends...');
+            setTimeout(() => {
+                showModal('AI Trend Analysis', `
+                    <h3>📈 Social Media Trend Prediction</h3>
+                    <div style="margin: 15px 0;">
+                        <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 6px; padding: 12px; margin-bottom: 10px;">
+                            <strong style="color: #ef4444;">🔥 Viral Potential: 94%</strong><br>
+                            <span style="color: #e2e8f0; font-size: 12px;">High controversy + community impact = strong engagement</span>
+                        </div>
+                        <div style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 6px; padding: 12px; margin-bottom: 10px;">
+                            <strong style="color: #3b82f6;">📱 Platform Predictions:</strong><br>
+                            <span style="color: #e2e8f0; font-size: 12px;">Twitter: 4.1K retweets | TikTok: High clip potential | Facebook: 5.2K shares</span>
+                        </div>
+                        <div style="background: rgba(168, 85, 247, 0.1); border: 1px solid rgba(168, 85, 247, 0.2); border-radius: 6px; padding: 12px;">
+                            <strong style="color: #a855f7;">⏰ Optimal Timing:</strong><br>
+                            <span style="color: #e2e8f0; font-size: 12px;">Publish within next 30 minutes for maximum reach</span>
+                        </div>
+                    </div>
+                    <button class="export-btn" style="width: 100%;">🚀 Auto-Schedule Posts</button>
+                `);
+            }, 2000);
+        }
+
+        // Enhanced Keyboard Shortcuts
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                const modals = document.querySelectorAll('.modal');
+                modals.forEach(modal => {
+                    if (modal.style.display === 'block') {
+                        modal.style.display = 'none';
+                    }
+                });
+            } else if (event.key === ' ' && !event.target.matches('input, textarea, select')) {
+                event.preventDefault();
+                togglePlayPause();
+            } else if (event.ctrlKey && event.key === 's') {
+                event.preventDefault();
+                quickExport();
+                showNotification('Quick save triggered (Ctrl+S)');
+            } else if (event.ctrlKey && event.key === 'k') {
+                event.preventDefault();
+                showShareModal();
+            } else if (event.ctrlKey && event.key === ',') {
+                event.preventDefault();
+                showSettings();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CivicScoop Reports - Automated Intelligence Reports</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0f1c;
+            color: #e2e8f0;
+            line-height: 1.6;
+        }
+
+        /* Header Styles */
+        .header {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo h1 {
+            color: #60a5fa;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .pro-badge {
+            background: linear-gradient(135deg, #dc2626, #ea580c);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .nav-item {
+            color: #94a3b8;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+            position: relative;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: #60a5fa;
+        }
+
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #60a5fa;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px 15px;
+            border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+
+        .page-header {
+            margin-bottom: 40px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #60a5fa, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-subtitle {
+            color: #94a3b8;
+            font-size: 16px;
+        }
+
+        /* Action Bar */
+        .action-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-input {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 10px 40px 10px 15px;
+            color: #e2e8f0;
+            font-size: 14px;
+            outline: none;
+            width: 250px;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: #60a5fa;
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+        }
+
+        /* Report Grid */
+        .reports-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .report-card {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .report-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #3b82f6, #a855f7);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .report-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            border-color: rgba(96, 165, 250, 0.3);
+        }
+
+        .report-card:hover::before {
+            opacity: 1;
+        }
+
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .report-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(96, 165, 250, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #60a5fa;
+            font-size: 20px;
+        }
+
+        .report-status {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-ready {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+
+        .status-generating {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+        }
+
+        .status-scheduled {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+        }
+
+        .report-title {
+            color: #e2e8f0;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .report-description {
+            color: #94a3b8;
+            font-size: 14px;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .report-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+
+        .report-type {
+            color: #60a5fa;
+            font-weight: 500;
+        }
+
+        .report-date {
+            color: #64748b;
+        }
+
+        .report-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #94a3b8;
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .action-btn:hover {
+            background: rgba(96, 165, 250, 0.1);
+            color: #60a5fa;
+            border-color: rgba(96, 165, 250, 0.3);
+        }
+
+        .action-btn.primary {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            border: none;
+        }
+
+        /* Report Builder Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background: #1e293b;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 800px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-title {
+            color: #e2e8f0;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .close-btn:hover {
+            color: #e2e8f0;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            color: #e2e8f0;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-label {
+            color: #94a3b8;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 10px 12px;
+            color: #e2e8f0;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            border-color: #60a5fa;
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .checkbox {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+            background: rgba(30, 41, 59, 0.8);
+        }
+
+        .checkbox:checked {
+            background: #3b82f6;
+            border-color: #3b82f6;
+        }
+
+        .checkbox:checked::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 12px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .checkbox-label {
+            color: #e2e8f0;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        /* Schedule Section */
+        .schedule-section {
+            background: rgba(59, 130, 246, 0.05);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #a855f7);
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            color: #94a3b8;
+            font-size: 12px;
+            margin-top: 5px;
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 20px;
+            }
+
+            .action-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .reports-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                margin: 10px;
+                width: calc(100% - 20px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <h1>CivicScoop</h1>
+                <span class="pro-badge">Reports</span>
+            </div>
+            <nav class="header-nav">
+                <a href="CivicScoop_Dashboard.html" class="nav-item">Dashboard</a>
+                <a href="CivicScoop_Analytics.html" class="nav-item">Analytics</a>
+                <a href="CivicScoop_Reports.html" class="nav-item active">Reports</a>
+                <a href="CivicScoop_Settings.html" class="nav-item">Settings</a>
+            </nav>
+            <div class="user-profile">
+                <div class="avatar">JR</div>
+                <div>
+                    <div style="font-size: 14px; font-weight: 600;">John Reporter</div>
+                    <div style="font-size: 12px; color: #94a3b8;">Senior Correspondent</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">Automated Reports</h1>
+            <p class="page-subtitle">Generate, schedule, and manage comprehensive intelligence reports</p>
+        </div>
+
+        <!-- Action Bar -->
+        <div class="action-bar">
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="openReportBuilder()">
+                    <i class="fas fa-plus"></i>
+                    New Report
+                </button>
+                <button class="btn btn-secondary" onclick="importTemplate()">
+                    <i class="fas fa-upload"></i>
+                    Import Template
+                </button>
+                <button class="btn btn-secondary" onclick="scheduleReport()">
+                    <i class="fas fa-calendar"></i>
+                    Schedule Report
+                </button>
+            </div>
+            <div class="search-bar">
+                <input type="text" class="search-input" placeholder="Search reports..." id="reportSearch">
+                <i class="fas fa-search" style="margin-left: -30px; color: #94a3b8;"></i>
+            </div>
+        </div>
+
+        <!-- Reports Grid -->
+        <div class="reports-grid" id="reportsGrid">
+            <!-- Reports will be populated by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Report Builder Modal -->
+    <div class="modal" id="reportBuilderModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Create New Report</h2>
+                <button class="close-btn" onclick="closeReportBuilder()">&times;</button>
+            </div>
+
+            <div class="form-section">
+                <h3 class="section-title">Report Configuration</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Report Name</label>
+                        <input type="text" class="form-input" id="reportName" placeholder="Monthly Civic Intelligence Report">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Report Type</label>
+                        <select class="form-select" id="reportType">
+                            <option value="weekly">Weekly Summary</option>
+                            <option value="monthly">Monthly Analysis</option>
+                            <option value="quarterly">Quarterly Insights</option>
+                            <option value="custom">Custom Report</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Format</label>
+                        <select class="form-select" id="reportFormat">
+                            <option value="pdf">PDF Document</option>
+                            <option value="html">HTML Dashboard</option>
+                            <option value="excel">Excel Spreadsheet</option>
+                            <option value="presentation">PowerPoint</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Priority Level</label>
+                        <select class="form-select" id="reportPriority">
+                            <option value="standard">Standard</option>
+                            <option value="high">High Priority</option>
+                            <option value="urgent">Urgent</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-top: 20px;">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-textarea" id="reportDescription" placeholder="Describe the purpose and scope of this report..."></textarea>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3 class="section-title">Data Sources</h3>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" class="checkbox" id="source1" checked>
+                        <label class="checkbox-label" for="source1">Meeting Transcripts</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" class="checkbox" id="source2" checked>
+                        <label class="checkbox-label" for="source2">Citizen Engagement Data</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" class="checkbox" id="source3">
+                        <label class="checkbox-label" for="source3">Social Media Analytics</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" class="checkbox" id="source4" checked>
+                        <label class="checkbox-label" for="source4">Quote Extractions</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" class="checkbox" id="source5">
+                        <label class="checkbox-label" for="source5">Performance Metrics</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" class="checkbox" id="source6">
+                        <label class="checkbox-label" for="source6">Trend Analysis</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="schedule-section">
+                <h3 class="section-title">Automation Schedule</h3>
+                <div class="schedule-grid">
+                    <div class="form-group">
+                        <label class="form-label">Frequency</label>
+                        <select class="form-select" id="frequency">
+                            <option value="manual">Manual Generation</option>
+                            <option value="daily">Daily</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="monthly">Monthly</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Start Date</label>
+                        <input type="date" class="form-input" id="startDate">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Time</label>
+                        <input type="time" class="form-input" id="scheduleTime" value="09:00">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email Recipients</label>
+                        <input type="email" class="form-input" id="recipients" placeholder="email@example.com">
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+                <button class="btn btn-secondary" onclick="closeReportBuilder()">Cancel</button>
+                <button class="btn btn-primary" onclick="createReport()">
+                    <i class="fas fa-rocket"></i>
+                    Create Report
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample reports data
+        const reportsData = [
+            {
+                id: 1,
+                title: 'Weekly Municipal Intelligence',
+                description: 'Comprehensive analysis of city council meetings, public engagement, and trending topics from the past week.',
+                type: 'Weekly Summary',
+                status: 'ready',
+                date: 'Dec 2, 2025',
+                size: '2.4 MB',
+                icon: 'fas fa-calendar-week',
+                actions: ['download', 'share', 'schedule']
+            },
+            {
+                id: 2,
+                title: 'Austin Housing Crisis Deep Dive',
+                description: 'In-depth analysis of the ongoing housing debate including stakeholder positions, public sentiment, and policy implications.',
+                type: 'Custom Analysis',
+                status: 'ready',
+                date: 'Dec 2, 2025',
+                size: '5.7 MB',
+                icon: 'fas fa-home',
+                actions: ['download', 'share', 'edit']
+            },
+            {
+                id: 3,
+                title: 'Monthly Engagement Metrics',
+                description: 'Citizen participation statistics, engagement trends, and community feedback analysis for November 2025.',
+                type: 'Monthly Report',
+                status: 'generating',
+                date: 'Generating...',
+                size: '---',
+                icon: 'fas fa-users',
+                actions: ['view', 'cancel']
+            },
+            {
+                id: 4,
+                title: 'Quarterly Budget Analysis',
+                description: 'Financial policy tracking across multiple jurisdictions with comparative analysis and fiscal impact projections.',
+                type: 'Quarterly Insights',
+                status: 'scheduled',
+                date: 'Dec 15, 2025',
+                size: 'Scheduled',
+                icon: 'fas fa-chart-pie',
+                actions: ['preview', 'edit', 'reschedule']
+            },
+            {
+                id: 5,
+                title: 'Emergency Council Sessions Report',
+                description: 'Analysis of urgent municipal responses including crisis management effectiveness and public communication strategies.',
+                type: 'Special Report',
+                status: 'ready',
+                date: 'Nov 30, 2025',
+                size: '3.2 MB',
+                icon: 'fas fa-exclamation-triangle',
+                actions: ['download', 'share', 'archive']
+            },
+            {
+                id: 6,
+                title: 'Climate Policy Tracking',
+                description: 'Environmental initiative progress across Miami-Dade, Seattle, and other progressive municipalities with implementation timelines.',
+                type: 'Policy Analysis',
+                status: 'ready',
+                date: 'Dec 1, 2025',
+                size: '4.1 MB',
+                icon: 'fas fa-leaf',
+                actions: ['download', 'share', 'update']
+            }
+        ];
+
+        // Initialize reports
+        document.addEventListener('DOMContentLoaded', function() {
+            renderReports();
+            setupSearch();
+        });
+
+        function renderReports(reports = reportsData) {
+            const grid = document.getElementById('reportsGrid');
+
+            grid.innerHTML = reports.map(report => `
+                <div class="report-card" onclick="openReport(${report.id})">
+                    <div class="report-header">
+                        <div class="report-icon">
+                            <i class="${report.icon}"></i>
+                        </div>
+                        <div class="report-status status-${report.status}">
+                            ${report.status}
+                        </div>
+                    </div>
+                    <h3 class="report-title">${report.title}</h3>
+                    <p class="report-description">${report.description}</p>
+                    <div class="report-meta">
+                        <span class="report-type">${report.type}</span>
+                        <span class="report-date">${report.date}</span>
+                    </div>
+                    <div class="report-actions">
+                        ${report.actions.map(action => `
+                            <button class="action-btn ${action === 'download' ? 'primary' : ''}" onclick="event.stopPropagation(); executeAction('${action}', ${report.id})">
+                                <i class="fas fa-${getActionIcon(action)}"></i>
+                                ${capitalizeFirst(action)}
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getActionIcon(action) {
+            const icons = {
+                download: 'download',
+                share: 'share',
+                schedule: 'calendar',
+                edit: 'edit',
+                view: 'eye',
+                cancel: 'times',
+                preview: 'search',
+                reschedule: 'clock',
+                archive: 'archive',
+                update: 'sync'
+            };
+            return icons[action] || 'cog';
+        }
+
+        function capitalizeFirst(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        function setupSearch() {
+            const searchInput = document.getElementById('reportSearch');
+            searchInput.addEventListener('input', function(e) {
+                const term = e.target.value.toLowerCase();
+                const filtered = reportsData.filter(report =>
+                    report.title.toLowerCase().includes(term) ||
+                    report.description.toLowerCase().includes(term) ||
+                    report.type.toLowerCase().includes(term)
+                );
+                renderReports(filtered);
+            });
+        }
+
+        function openReportBuilder() {
+            document.getElementById('reportBuilderModal').style.display = 'block';
+            // Set default date to today
+            const today = new Date();
+            document.getElementById('startDate').value = today.toISOString().split('T')[0];
+        }
+
+        function closeReportBuilder() {
+            document.getElementById('reportBuilderModal').style.display = 'none';
+        }
+
+        function createReport() {
+            const name = document.getElementById('reportName').value;
+            const type = document.getElementById('reportType').value;
+            const format = document.getElementById('reportFormat').value;
+
+            if (!name) {
+                alert('Please enter a report name');
+                return;
+            }
+
+            // Show progress animation
+            showReportProgress();
+
+            // Simulate report creation
+            setTimeout(() => {
+                alert(`Report "${name}" has been created successfully!`);
+                closeReportBuilder();
+
+                // Add new report to the grid
+                const newReport = {
+                    id: reportsData.length + 1,
+                    title: name,
+                    description: document.getElementById('reportDescription').value || 'Custom generated report',
+                    type: capitalizeFirst(type.replace('_', ' ')),
+                    status: 'ready',
+                    date: new Date().toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                    }),
+                    size: '2.' + Math.floor(Math.random() * 9) + ' MB',
+                    icon: 'fas fa-file-alt',
+                    actions: ['download', 'share', 'edit']
+                };
+
+                reportsData.unshift(newReport);
+                renderReports();
+            }, 3000);
+        }
+
+        function showReportProgress() {
+            // Create a simple progress indicator
+            const modal = document.getElementById('reportBuilderModal');
+            const originalContent = modal.innerHTML;
+
+            modal.innerHTML = `
+                <div class="modal-content" style="text-align: center; padding: 60px;">
+                    <div style="margin-bottom: 30px;">
+                        <i class="fas fa-cogs" style="font-size: 48px; color: #60a5fa; animation: spin 2s linear infinite;"></i>
+                    </div>
+                    <h3 style="color: #e2e8f0; margin-bottom: 15px;">Generating Report</h3>
+                    <p style="color: #94a3b8; margin-bottom: 30px;">Processing data and compiling analysis...</p>
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <div class="progress-text" id="progressText">0%</div>
+                    </div>
+                </div>
+            `;
+
+            // Animate progress
+            let progress = 0;
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+
+            const progressInterval = setInterval(() => {
+                progress += Math.random() * 15;
+                if (progress > 100) progress = 100;
+
+                progressFill.style.width = progress + '%';
+                progressText.textContent = Math.floor(progress) + '%';
+
+                if (progress >= 100) {
+                    clearInterval(progressInterval);
+                    // Restore original content after completion
+                    setTimeout(() => {
+                        modal.innerHTML = originalContent;
+                    }, 500);
+                }
+            }, 200);
+        }
+
+        function executeAction(action, reportId) {
+            const report = reportsData.find(r => r.id === reportId);
+
+            switch(action) {
+                case 'download':
+                    alert(`Downloading "${report.title}"...`);
+                    simulateDownload(report.title);
+                    break;
+                case 'share':
+                    showShareDialog(report);
+                    break;
+                case 'schedule':
+                    openScheduleDialog(report);
+                    break;
+                case 'edit':
+                    alert(`Opening "${report.title}" for editing...`);
+                    break;
+                case 'view':
+                    alert(`Viewing generation progress for "${report.title}"...`);
+                    break;
+                case 'cancel':
+                    if (confirm(`Cancel generation of "${report.title}"?`)) {
+                        alert('Report generation cancelled');
+                    }
+                    break;
+                case 'preview':
+                    alert(`Opening preview for "${report.title}"...`);
+                    break;
+                case 'reschedule':
+                    openScheduleDialog(report);
+                    break;
+                case 'archive':
+                    if (confirm(`Archive "${report.title}"?`)) {
+                        alert('Report archived');
+                    }
+                    break;
+                case 'update':
+                    alert(`Updating "${report.title}" with latest data...`);
+                    break;
+                default:
+                    alert(`Action "${action}" not implemented yet`);
+            }
+        }
+
+        function simulateDownload(reportName) {
+            // Create a temporary download link
+            const link = document.createElement('a');
+            link.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(`CivicScoop Report: ${reportName}\n\nThis is a sample report generated by CivicScoop.\n\nReport Details:\n- Generated: ${new Date().toLocaleString()}\n- Type: Automated Intelligence Report\n- Status: Production Ready\n\nFor full functionality, integrate with your CivicScoop platform.`);
+            link.download = `${reportName.replace(/\s+/g, '_')}.txt`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function showShareDialog(report) {
+            const shareUrl = `https://reports.civicscoop.pro/share/${report.id}`;
+            alert(`Share Link for "${report.title}":\n\n${shareUrl}\n\n(Link copied to clipboard)`);
+        }
+
+        function openScheduleDialog(report) {
+            const frequency = prompt('Schedule frequency:\n\n1. Daily\n2. Weekly\n3. Monthly\n\nEnter number (1-3):');
+            const frequencies = ['', 'daily', 'weekly', 'monthly'];
+
+            if (frequency && frequencies[frequency]) {
+                alert(`"${report.title}" scheduled for ${frequencies[frequency]} generation.`);
+            }
+        }
+
+        function openReport(reportId) {
+            const report = reportsData.find(r => r.id === reportId);
+            alert(`Opening "${report.title}"...\n\nThis would open the full report viewer with interactive charts, export options, and sharing capabilities.`);
+        }
+
+        function importTemplate() {
+            alert('Template import feature - Select pre-built report templates from the CivicScoop library');
+        }
+
+        function scheduleReport() {
+            alert('Quick schedule feature - Set up automated report generation with one click');
+        }
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('reportBuilderModal');
+            if (event.target === modal) {
+                closeReportBuilder();
+            }
+        });
+
+        // Add CSS for spin animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
