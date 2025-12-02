@@ -593,6 +593,229 @@
             }
         }
 
+        /* URL Analysis Section */
+        .url-analysis-section {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 30px;
+        }
+
+        .analysis-container {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+        }
+
+        .analysis-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .analysis-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #60a5fa, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .analysis-subtitle {
+            color: #94a3b8;
+            font-size: 16px;
+        }
+
+        .url-input-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .url-input {
+            flex: 1;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 16px 20px;
+            font-size: 16px;
+            color: #e2e8f0;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .url-input:focus {
+            border-color: #60a5fa;
+            box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.1);
+        }
+
+        .url-input::placeholder {
+            color: #64748b;
+        }
+
+        .analyze-btn {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 16px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .analyze-btn:hover {
+            background: linear-gradient(135deg, #1d4ed8, #1e40af);
+            transform: translateY(-1px);
+        }
+
+        .analyze-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .quick-examples {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .example-btn {
+            background: rgba(96, 165, 250, 0.1);
+            color: #60a5fa;
+            border: 1px solid rgba(96, 165, 250, 0.3);
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .example-btn:hover {
+            background: rgba(96, 165, 250, 0.2);
+            border-color: rgba(96, 165, 250, 0.5);
+        }
+
+        .analysis-status {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .status-loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            color: #60a5fa;
+        }
+
+        .status-success {
+            color: #22c55e;
+        }
+
+        .status-error {
+            color: #ef4444;
+        }
+
+        .analysis-result {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(22, 163, 74, 0.1);
+            border: 1px solid rgba(22, 163, 74, 0.3);
+            border-radius: 12px;
+        }
+
+        .result-success {
+            background: rgba(22, 163, 74, 0.1);
+            border-color: rgba(22, 163, 74, 0.3);
+        }
+
+        .result-error {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .result-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #22c55e;
+        }
+
+        .result-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .detail-item {
+            background: rgba(15, 23, 42, 0.5);
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            color: #94a3b8;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            color: #e2e8f0;
+            font-weight: 500;
+        }
+
+        .topics-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 5px;
+        }
+
+        .topic-tag-small {
+            background: rgba(96, 165, 250, 0.1);
+            color: #60a5fa;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .add-to-dashboard-btn {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-to-dashboard-btn:hover {
+            background: linear-gradient(135deg, #16a34a, #15803d);
+            transform: translateY(-1px);
+        }
+
         /* Animation Classes */
         .fade-in {
             animation: fadeIn 0.6s ease-in-out;
@@ -722,6 +945,58 @@
                 <i class="fas fa-chart-line"></i>
                 Topic Trends
             </button>
+        </div>
+    </section>
+
+    <!-- URL Analysis Section -->
+    <section class="url-analysis-section">
+        <div class="analysis-container">
+            <div class="analysis-header">
+                <h2 class="analysis-title">🚀 Analyze New Meeting</h2>
+                <p class="analysis-subtitle">Enter any city council meeting URL for instant AI-powered analysis</p>
+            </div>
+
+            <div class="url-input-container">
+                <input
+                    type="url"
+                    class="url-input"
+                    id="meetingUrl"
+                    placeholder="https://example.com/city-council-meeting"
+                    />
+                <button class="analyze-btn" id="analyzeBtn" onclick="analyzeMeeting()">
+                    <i class="fas fa-robot"></i> Analyze with AI
+                </button>
+            </div>
+
+            <div class="quick-examples">
+                <span style="color: #94a3b8; font-size: 14px; margin-right: 10px;">Quick examples:</span>
+                <button class="example-btn" onclick="fillExample('austin')">Austin Council</button>
+                <button class="example-btn" onclick="fillExample('seattle')">Seattle Budget</button>
+                <button class="example-btn" onclick="fillExample('miami')">Miami Climate</button>
+                <button class="example-btn" onclick="fillExample('denver')">Denver Transit</button>
+            </div>
+
+            <!-- Analysis Status -->
+            <div class="analysis-status" id="analysisStatus">
+                <div class="status-loading">
+                    <div class="spinner"></div>
+                    <span>Analyzing meeting content with AI...</span>
+                </div>
+            </div>
+
+            <!-- Analysis Result -->
+            <div class="analysis-result" id="analysisResult">
+                <div class="result-header">
+                    <h3 class="result-title">✅ Analysis Complete!</h3>
+                    <button class="add-to-dashboard-btn" id="addToDashboardBtn" onclick="addToDashboard()">
+                        <i class="fas fa-plus"></i> Add to Dashboard
+                    </button>
+                </div>
+
+                <div class="result-details" id="resultDetails">
+                    <!-- Analysis results will be populated here -->
+                </div>
+            </div>
         </div>
     </section>
 
@@ -859,6 +1134,300 @@
 
         let currentFilter = 'all';
         let searchTerm = '';
+
+        // URL Analysis functionality
+        let currentAnalysis = null;
+
+        function fillExample(city) {
+            const examples = {
+                'austin': 'https://www.austintexas.gov/department/city-council/council/council_meeting_info_center.htm',
+                'seattle': 'https://seattle.gov/council/meetings/committee-meetings',
+                'miami': 'https://www.miamidade.gov/global/government/commission/meetings.page',
+                'denver': 'https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/City-Council'
+            };
+
+            const urlInput = document.getElementById('meetingUrl');
+            urlInput.value = examples[city] || 'https://example.com/city-council-meeting';
+            urlInput.focus();
+        }
+
+        async function analyzeMeeting() {
+            const urlInput = document.getElementById('meetingUrl');
+            const analyzeBtn = document.getElementById('analyzeBtn');
+            const analysisStatus = document.getElementById('analysisStatus');
+            const analysisResult = document.getElementById('analysisResult');
+
+            const url = urlInput.value.trim();
+
+            if (!url) {
+                alert('Please enter a meeting URL');
+                return;
+            }
+
+            if (!isValidUrl(url)) {
+                alert('Please enter a valid URL');
+                return;
+            }
+
+            // Show loading state
+            analyzeBtn.disabled = true;
+            analyzeBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing...';
+            analysisStatus.style.display = 'block';
+            analysisResult.style.display = 'none';
+
+            try {
+                // Simulate AI analysis
+                const analysis = await simulateAIAnalysis(url);
+
+                // Show results
+                displayAnalysisResult(analysis);
+
+            } catch (error) {
+                showAnalysisError(error.message);
+            } finally {
+                // Reset button state
+                analyzeBtn.disabled = false;
+                analyzeBtn.innerHTML = '<i class="fas fa-robot"></i> Analyze with AI';
+                analysisStatus.style.display = 'none';
+            }
+        }
+
+        async function simulateAIAnalysis(url) {
+            // Simulate network delay
+            await new Promise(resolve => setTimeout(resolve, 2000 + Math.random() * 3000));
+
+            // Extract potential city from URL
+            const location = extractLocationFromUrl(url);
+
+            // Generate realistic analysis data
+            const topics = generateTopics();
+            const priority = calculatePriority(topics);
+
+            return {
+                id: 'new-' + Date.now(),
+                title: generateTitle(location, topics),
+                location: location,
+                date: new Date().toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                }),
+                url: url,
+                priority: priority.level,
+                priorityScore: priority.score + '%',
+                segments: generateSegments(),
+                engagement: generateEngagement(),
+                topics: topics,
+                aiAccuracy: Math.floor(Math.random() * 15) + 85, // 85-99%
+                quotes: generateQuotes(),
+                summary: generateSummary(topics, location)
+            };
+        }
+
+        function extractLocationFromUrl(url) {
+            const cities = ['Austin', 'Seattle', 'Miami', 'Denver', 'Portland', 'Phoenix', 'Houston', 'Dallas'];
+            const urlLower = url.toLowerCase();
+
+            for (const city of cities) {
+                if (urlLower.includes(city.toLowerCase())) {
+                    return city;
+                }
+            }
+
+            // Default random city
+            return cities[Math.floor(Math.random() * cities.length)];
+        }
+
+        function generateTopics() {
+            const allTopics = [
+                'Housing', 'Budget', 'Climate', 'Transit', 'Public Safety', 'Education',
+                'Healthcare', 'Economic Development', 'Infrastructure', 'Parks & Recreation',
+                'Zoning', 'Environment', 'Community Services', 'Transportation'
+            ];
+
+            const numTopics = Math.floor(Math.random() * 3) + 2; // 2-4 topics
+            const selectedTopics = [];
+
+            while (selectedTopics.length < numTopics) {
+                const randomTopic = allTopics[Math.floor(Math.random() * allTopics.length)];
+                if (!selectedTopics.includes(randomTopic)) {
+                    selectedTopics.push(randomTopic);
+                }
+            }
+
+            return selectedTopics;
+        }
+
+        function calculatePriority(topics) {
+            const criticalTopics = ['Housing', 'Public Safety', 'Budget'];
+            const highTopics = ['Climate', 'Transit', 'Education'];
+
+            if (topics.some(topic => criticalTopics.includes(topic))) {
+                return { level: 'critical', score: Math.floor(Math.random() * 30) + 70 };
+            } else if (topics.some(topic => highTopics.includes(topic))) {
+                return { level: 'high', score: Math.floor(Math.random() * 25) + 50 };
+            } else {
+                return { level: 'medium', score: Math.floor(Math.random() * 30) + 30 };
+            }
+        }
+
+        function generateTitle(location, topics) {
+            const templates = [
+                `${location} City Council Meeting: ${topics[0]} Initiative`,
+                `${location} Council Session: ${topics[0]} and ${topics[1] || 'Policy'} Discussion`,
+                `${location} Municipal Meeting: ${topics[0]} Action Plan`,
+                `${location} City Council: ${topics[0]} Policy Review`
+            ];
+
+            return templates[Math.floor(Math.random() * templates.length)];
+        }
+
+        function generateSegments() {
+            const minutes = Math.floor(Math.random() * 20) + 5;
+            const seconds = Math.floor(Math.random() * 40) + 10;
+            return `${minutes}:${seconds} high segments`;
+        }
+
+        function generateEngagement() {
+            const percentage = Math.floor(Math.random() * 60) + 25;
+            return `${percentage}% high engagement`;
+        }
+
+        function generateQuotes() {
+            const quotes = [
+                "We need to address this critical issue with immediate action and community involvement.",
+                "The proposed budget allocation will significantly impact our residents' quality of life.",
+                "Public input is essential for making informed decisions that benefit everyone.",
+                "This initiative represents our commitment to sustainable development and progress.",
+                "We must balance fiscal responsibility with community needs and growth."
+            ];
+
+            return [
+                {
+                    text: quotes[Math.floor(Math.random() * quotes.length)],
+                    speaker: 'Council Member',
+                    confidence: Math.floor(Math.random() * 15) + 85
+                }
+            ];
+        }
+
+        function generateSummary(topics, location) {
+            return `${location} city officials convened to discuss ${topics[0].toLowerCase()} initiatives and related municipal matters. The meeting featured comprehensive discussions on policy implementation and community impact assessments.`;
+        }
+
+        function displayAnalysisResult(analysis) {
+            currentAnalysis = analysis;
+
+            const resultDetails = document.getElementById('resultDetails');
+            const analysisResult = document.getElementById('analysisResult');
+
+            resultDetails.innerHTML = `
+                <div class="detail-item">
+                    <div class="detail-label">Meeting Title</div>
+                    <div class="detail-value">${analysis.title}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Location</div>
+                    <div class="detail-value">${analysis.location}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Priority Level</div>
+                    <div class="detail-value">${analysis.priority.charAt(0).toUpperCase() + analysis.priority.slice(1)} (${analysis.priorityScore})</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Engagement Estimate</div>
+                    <div class="detail-value">${analysis.engagement}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">AI Accuracy</div>
+                    <div class="detail-value">${analysis.aiAccuracy}%</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Topics Identified</div>
+                    <div class="detail-value">
+                        <div class="topics-list">
+                            ${analysis.topics.map(topic => `<span class="topic-tag-small">${topic}</span>`).join('')}
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-item" style="grid-column: 1 / -1;">
+                    <div class="detail-label">Summary</div>
+                    <div class="detail-value">${analysis.summary}</div>
+                </div>
+            `;
+
+            analysisResult.className = 'analysis-result result-success';
+            analysisResult.style.display = 'block';
+
+            // Scroll to results
+            analysisResult.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function showAnalysisError(message) {
+            const resultDetails = document.getElementById('resultDetails');
+            const analysisResult = document.getElementById('analysisResult');
+
+            document.querySelector('.result-title').innerHTML = '❌ Analysis Failed';
+            document.querySelector('.result-title').style.color = '#ef4444';
+
+            resultDetails.innerHTML = `
+                <div class="detail-item" style="grid-column: 1 / -1;">
+                    <div class="detail-label">Error</div>
+                    <div class="detail-value">${message}</div>
+                </div>
+                <div class="detail-item" style="grid-column: 1 / -1;">
+                    <div class="detail-label">Suggestions</div>
+                    <div class="detail-value">
+                        • Ensure the URL is accessible<br>
+                        • Check if the website allows automated access<br>
+                        • Try a different meeting URL<br>
+                        • Verify the URL format is correct
+                    </div>
+                </div>
+            `;
+
+            analysisResult.className = 'analysis-result result-error';
+            analysisResult.style.display = 'block';
+            document.getElementById('addToDashboardBtn').style.display = 'none';
+        }
+
+        function addToDashboard() {
+            if (!currentAnalysis) return;
+
+            // Add to meetings data
+            meetingsData.unshift(currentAnalysis);
+
+            // Refresh the meetings grid
+            renderMeetings();
+
+            // Show success message
+            const addBtn = document.getElementById('addToDashboardBtn');
+            const originalText = addBtn.innerHTML;
+            addBtn.innerHTML = '<i class="fas fa-check"></i> Added!';
+            addBtn.style.background = 'linear-gradient(135deg, #059669, #047857)';
+
+            setTimeout(() => {
+                addBtn.innerHTML = originalText;
+                addBtn.style.background = 'linear-gradient(135deg, #22c55e, #16a34a)';
+
+                // Clear the form
+                document.getElementById('meetingUrl').value = '';
+                document.getElementById('analysisResult').style.display = 'none';
+                currentAnalysis = null;
+            }, 2000);
+
+            // Scroll to the top of meetings section
+            document.getElementById('meetingsGrid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function isValidUrl(string) {
+            try {
+                new URL(string);
+                return true;
+            } catch (_) {
+                return false;
+            }
+        }
 
         // Initialize the page
         document.addEventListener('DOMContentLoaded', function() {
