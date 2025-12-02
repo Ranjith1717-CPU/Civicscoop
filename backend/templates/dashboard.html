@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CivicScoop Dashboard - AI-Powered Civic Intelligence</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0f1c;
+            color: #e2e8f0;
+            line-height: 1.6;
+        }
+
+        /* Header Styles */
+        .header {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo h1 {
+            color: #60a5fa;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .pro-badge {
+            background: linear-gradient(135deg, #dc2626, #ea580c);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .nav-item {
+            color: #94a3b8;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: #60a5fa;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #0a0f1c 0%, #1e293b 50%, #0a0f1c 100%);
+            padding: 60px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(168, 85, 247, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #60a5fa, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 18px;
+            color: #94a3b8;
+            margin-bottom: 30px;
+        }
+
+        /* Stats Banner */
+        .stats-banner {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.8));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            margin: -20px 30px 40px;
+            max-width: calc(1400px - 60px);
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            color: #60a5fa;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            color: #94a3b8;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* Action Section */
+        .action-section {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px 40px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #e2e8f0;
+        }
+
+        .add-meeting-btn {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .add-meeting-btn:hover {
+            background: linear-gradient(135deg, #16a34a, #15803d);
+            transform: translateY(-1px);
+        }
+
+        /* Meeting Grid */
+        .meetings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .meeting-card {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .meeting-card:hover {
+            background: rgba(30, 41, 59, 0.8);
+            border-color: rgba(96, 165, 250, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .priority-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .priority-critical {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .priority-high {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .priority-medium {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .meeting-title {
+            color: #e2e8f0;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .meeting-meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .engagement-score {
+            color: #22c55e;
+            font-weight: 600;
+        }
+
+        .topic-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .topic-tag {
+            background: rgba(96, 165, 250, 0.1);
+            color: #60a5fa;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #94a3b8;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .action-btn:hover {
+            background: rgba(96, 165, 250, 0.1);
+            color: #60a5fa;
+            border-color: rgba(96, 165, 250, 0.3);
+        }
+
+        .delete-btn:hover {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 80px 30px;
+        }
+
+        .empty-icon {
+            font-size: 64px;
+            color: #64748b;
+            margin-bottom: 20px;
+        }
+
+        .empty-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #94a3b8;
+            margin-bottom: 10px;
+        }
+
+        .empty-description {
+            color: #64748b;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .meetings-grid {
+                grid-template-columns: 1fr;
+                padding: 0 20px;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <h1>🏛️ CivicScoop</h1>
+                <span class="pro-badge">Pro Platform</span>
+            </div>
+            <nav class="header-nav">
+                <a href="/" class="nav-item active">Dashboard</a>
+                <a href="/analytics" class="nav-item">Analytics</a>
+                <a href="/reports" class="nav-item">Reports</a>
+                <a href="/settings" class="nav-item">Settings</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>AI-Powered Civic Intelligence</h1>
+            <p class="hero-subtitle">Real-time analysis of city council meetings with advanced AI insights</p>
+        </div>
+    </section>
+
+    <!-- Stats Banner -->
+    <div class="stats-banner">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-value" id="total-meetings">{{ meetings|length }}</div>
+                <div class="stat-label">Total Meetings Analyzed</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">98.7%</div>
+                <div class="stat-label">AI Accuracy Score</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">156</div>
+                <div class="stat-label">Active Stories</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">89.2K</div>
+                <div class="stat-label">Citizen Engagement</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="action-section">
+        <div class="section-header">
+            <h2 class="section-title">Recent Meetings</h2>
+            <a href="/add_meeting" class="add-meeting-btn">
+                <i class="fas fa-plus"></i>
+                Add New Meeting
+            </a>
+        </div>
+
+        {% if meetings %}
+        <div class="meetings-grid" id="meetings-grid">
+            {% for meeting in meetings %}
+            <div class="meeting-card" onclick="window.location.href='/meeting/{{ meeting.id }}'">
+                <div class="card-header">
+                    <div class="priority-badge priority-{{ meeting.priority }}">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        {{ meeting.priority.title() }} Priority {{ meeting.priority_score }}
+                    </div>
+                    <small style="color: #64748b;">{{ meeting.created_at.strftime('%b %d') }}</small>
+                </div>
+
+                <h3 class="meeting-title">{{ meeting.title }}</h3>
+
+                <div class="meeting-meta">
+                    <div class="meta-item">
+                        <i class="fas fa-calendar"></i>
+                        {{ meeting.date.strftime('%B %d, %Y') }}
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        {{ meeting.location }}
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-users"></i>
+                        <span class="engagement-score">{{ meeting.engagement }}</span>
+                    </div>
+                </div>
+
+                <div class="topic-tags">
+                    {% for topic in meeting.get_topics()[:3] %}
+                    <span class="topic-tag">{{ topic }}</span>
+                    {% endfor %}
+                </div>
+
+                <div class="card-actions" onclick="event.stopPropagation();">
+                    <button class="action-btn" onclick="viewMeeting({{ meeting.id }})">
+                        <i class="fas fa-eye"></i> View
+                    </button>
+                    <button class="action-btn" onclick="shareMeeting({{ meeting.id }})">
+                        <i class="fas fa-share"></i> Share
+                    </button>
+                    <button class="action-btn delete-btn" onclick="deleteMeeting({{ meeting.id }})">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <h3 class="empty-title">No meetings yet</h3>
+            <p class="empty-description">
+                Start by adding your first city council meeting for AI analysis
+            </p>
+            <a href="/add_meeting" class="add-meeting-btn">
+                <i class="fas fa-plus"></i>
+                Add Your First Meeting
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function viewMeeting(meetingId) {
+            window.location.href = `/meeting/${meetingId}`;
+        }
+
+        function shareMeeting(meetingId) {
+            const shareUrl = `${window.location.origin}/meeting/${meetingId}`;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: 'CivicScoop Meeting Analysis',
+                    url: shareUrl
+                });
+            } else {
+                // Fallback: Copy to clipboard
+                navigator.clipboard.writeText(shareUrl).then(() => {
+                    alert('Meeting link copied to clipboard!');
+                });
+            }
+        }
+
+        async function deleteMeeting(meetingId) {
+            if (!confirm('Are you sure you want to delete this meeting? This action cannot be undone.')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/delete_meeting/${meetingId}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    // Remove the meeting card from the UI
+                    location.reload(); // Simple refresh for now
+                } else {
+                    alert('Failed to delete meeting. Please try again.');
+                }
+            } catch (error) {
+                alert('Error deleting meeting: ' + error.message);
+            }
+        }
+
+        // Auto-refresh stats every 30 seconds
+        setInterval(async () => {
+            try {
+                const response = await fetch('/api/meetings');
+                const meetings = await response.json();
+                document.getElementById('total-meetings').textContent = meetings.length;
+            } catch (error) {
+                console.log('Failed to refresh stats:', error);
+            }
+        }, 30000);
+
+        // Initialize tooltips and animations on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add fade-in animation to meeting cards
+            const cards = document.querySelectorAll('.meeting-card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    card.style.transition = 'all 0.6s ease';
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, 100);
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>

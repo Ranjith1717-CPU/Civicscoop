@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Meeting - CivicScoop</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0f1c;
+            color: #e2e8f0;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Header Styles */
+        .header {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo h1 {
+            color: #60a5fa;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .pro-badge {
+            background: linear-gradient(135deg, #dc2626, #ea580c);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .nav-item {
+            color: #94a3b8;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .nav-item:hover {
+            color: #60a5fa;
+        }
+
+        .nav-item.active {
+            color: #60a5fa;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 30px;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .page-title {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #60a5fa, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            color: #94a3b8;
+        }
+
+        /* Form Styles */
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #e2e8f0;
+        }
+
+        .form-input {
+            width: 100%;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 15px 20px;
+            font-size: 16px;
+            color: #e2e8f0;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            border-color: #60a5fa;
+            box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: #64748b;
+        }
+
+        .form-textarea {
+            height: 120px;
+            resize: vertical;
+        }
+
+        .analyze-btn {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .analyze-btn:hover {
+            background: linear-gradient(135deg, #1d4ed8, #1e40af);
+            transform: translateY(-1px);
+        }
+
+        .analyze-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(96, 165, 250, 0.3);
+            border-top: 3px solid #60a5fa;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Results */
+        .results {
+            display: none;
+            margin-top: 30px;
+            padding: 25px;
+            background: rgba(22, 163, 74, 0.1);
+            border: 1px solid rgba(22, 163, 74, 0.3);
+            border-radius: 12px;
+        }
+
+        .results h3 {
+            color: #22c55e;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .result-item {
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .result-label {
+            color: #94a3b8;
+            font-weight: 500;
+        }
+
+        .result-value {
+            color: #e2e8f0;
+            font-weight: 600;
+        }
+
+        .error {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        .error h3 {
+            color: #ef4444;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #60a5fa;
+            text-decoration: none;
+            font-weight: 500;
+            margin-bottom: 30px;
+            transition: color 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: #3b82f6;
+        }
+
+        .topic-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 5px;
+        }
+
+        .topic-tag {
+            background: rgba(96, 165, 250, 0.1);
+            color: #60a5fa;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .quotes-list {
+            margin-top: 10px;
+        }
+
+        .quote-item {
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+        }
+
+        .quote-text {
+            font-style: italic;
+            color: #e2e8f0;
+            margin-bottom: 5px;
+        }
+
+        .quote-speaker {
+            font-size: 12px;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <h1>🏛️ CivicScoop</h1>
+                <span class="pro-badge">Pro Platform</span>
+            </div>
+            <nav class="header-nav">
+                <a href="/" class="nav-item">Dashboard</a>
+                <a href="/analytics" class="nav-item">Analytics</a>
+                <a href="/reports" class="nav-item">Reports</a>
+                <a href="/settings" class="nav-item">Settings</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <a href="/" class="back-link">
+            <i class="fas fa-arrow-left"></i>
+            Back to Dashboard
+        </a>
+
+        <div class="page-header">
+            <h1 class="page-title">Add New Meeting</h1>
+            <p class="page-subtitle">Analyze a meeting URL with AI-powered insights</p>
+        </div>
+
+        <div class="form-container">
+            <form id="meeting-form">
+                <div class="form-group">
+                    <label for="meeting-url" class="form-label">
+                        <i class="fas fa-link"></i> Meeting URL *
+                    </label>
+                    <input
+                        type="url"
+                        id="meeting-url"
+                        name="url"
+                        class="form-input"
+                        placeholder="https://example.com/city-council-meeting"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="meeting-title" class="form-label">
+                        <i class="fas fa-heading"></i> Custom Title (Optional)
+                    </label>
+                    <input
+                        type="text"
+                        id="meeting-title"
+                        name="title"
+                        class="form-input"
+                        placeholder="Leave blank to auto-extract from URL"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="meeting-notes" class="form-label">
+                        <i class="fas fa-sticky-note"></i> Additional Notes (Optional)
+                    </label>
+                    <textarea
+                        id="meeting-notes"
+                        name="notes"
+                        class="form-input form-textarea"
+                        placeholder="Any additional context or notes about this meeting..."
+                    ></textarea>
+                </div>
+
+                <button type="submit" class="analyze-btn" id="analyze-btn">
+                    <i class="fas fa-robot"></i> Analyze Meeting with AI
+                </button>
+            </form>
+
+            <!-- Loading State -->
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Analyzing meeting content with AI...</p>
+                <small>This may take a few moments</small>
+            </div>
+
+            <!-- Results -->
+            <div class="results" id="results">
+                <h3><i class="fas fa-check-circle"></i> Analysis Complete!</h3>
+                <div id="results-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('meeting-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const url = document.getElementById('meeting-url').value;
+            const customTitle = document.getElementById('meeting-title').value;
+            const notes = document.getElementById('meeting-notes').value;
+
+            // Show loading state
+            document.getElementById('analyze-btn').disabled = true;
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('results').style.display = 'none';
+
+            try {
+                const response = await fetch('/api/analyze_meeting', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        url: url,
+                        custom_title: customTitle,
+                        notes: notes
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Show success results
+                    showResults(data.analysis, data.meeting_id);
+                } else {
+                    // Show error
+                    showError(data.error || 'Analysis failed');
+                }
+            } catch (error) {
+                showError('Network error: ' + error.message);
+            } finally {
+                document.getElementById('analyze-btn').disabled = false;
+                document.getElementById('loading').style.display = 'none';
+            }
+        });
+
+        function showResults(analysis, meetingId) {
+            const resultsDiv = document.getElementById('results');
+            const contentDiv = document.getElementById('results-content');
+
+            resultsDiv.className = 'results';
+
+            const topicsHtml = analysis.topics.map(topic =>
+                `<span class="topic-tag">${topic}</span>`
+            ).join('');
+
+            const quotesHtml = analysis.key_quotes.map(quote =>
+                `<div class="quote-item">
+                    <div class="quote-text">"${quote.text}"</div>
+                    <div class="quote-speaker">— ${quote.speaker} (Confidence: ${quote.confidence}%)</div>
+                </div>`
+            ).join('');
+
+            contentDiv.innerHTML = `
+                <div class="result-item">
+                    <span class="result-label">Title:</span>
+                    <span class="result-value">${analysis.title}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Location:</span>
+                    <span class="result-value">${analysis.location}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Priority Level:</span>
+                    <span class="result-value">${analysis.priority.charAt(0).toUpperCase() + analysis.priority.slice(1)}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Estimated Engagement:</span>
+                    <span class="result-value">${analysis.engagement_estimate}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">AI Accuracy:</span>
+                    <span class="result-value">${analysis.ai_accuracy}%</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Topics Identified:</span>
+                    <div class="topic-tags">${topicsHtml}</div>
+                </div>
+                ${quotesHtml ? `
+                <div class="result-item">
+                    <span class="result-label">Key Quotes Extracted:</span>
+                    <div class="quotes-list">${quotesHtml}</div>
+                </div>
+                ` : ''}
+                <div style="margin-top: 20px; text-align: center;">
+                    <a href="/meeting/${meetingId}" style="color: #60a5fa; text-decoration: none; font-weight: 600;">
+                        <i class="fas fa-external-link-alt"></i> View Full Analysis
+                    </a>
+                </div>
+            `;
+
+            resultsDiv.style.display = 'block';
+
+            // Scroll to results
+            resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function showError(message) {
+            const resultsDiv = document.getElementById('results');
+            const contentDiv = document.getElementById('results-content');
+
+            resultsDiv.className = 'results error';
+            resultsDiv.querySelector('h3').innerHTML = '<i class="fas fa-exclamation-triangle"></i> Analysis Failed';
+
+            contentDiv.innerHTML = `
+                <div class="result-item">
+                    <span class="result-label">Error:</span>
+                    <span class="result-value">${message}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Suggestions:</span>
+                    <span class="result-value">
+                        • Ensure the URL is accessible<br>
+                        • Check if the website allows automated access<br>
+                        • Try a different meeting URL<br>
+                        • Contact support if the issue persists
+                    </span>
+                </div>
+            `;
+
+            resultsDiv.style.display = 'block';
+        }
+
+        // Auto-focus on URL input
+        document.getElementById('meeting-url').focus();
+
+        // Real-time URL validation
+        document.getElementById('meeting-url').addEventListener('input', function() {
+            const url = this.value;
+            const btn = document.getElementById('analyze-btn');
+
+            if (url && isValidUrl(url)) {
+                btn.style.background = 'linear-gradient(135deg, #3b82f6, #1d4ed8)';
+                btn.disabled = false;
+            } else {
+                btn.style.background = 'linear-gradient(135deg, #6b7280, #4b5563)';
+                btn.disabled = !!url; // Disable only if URL exists but is invalid
+            }
+        });
+
+        function isValidUrl(string) {
+            try {
+                new URL(string);
+                return true;
+            } catch (_) {
+                return false;
+            }
+        }
+    </script>
+</body>
+</html>
